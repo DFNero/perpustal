@@ -20,40 +20,27 @@ class BorrowingController extends Controller
 
     public function approve(Borrowing $borrowing)
     {
-        DB::transaction(function () use ($borrowing) {
-    
-            $library = $borrowing->library;
-            $book = $borrowing->book;
-    
-            // ambil stok dari pivot
-            $pivot = $library->books()
-                ->where('book_id', $book->id)
-                ->first()
-                ->pivot;
-    
-            if ($pivot->stock <= 0) {
-                abort(400, 'Stok buku habis');
-            }
-    
-            // kurangi stok
-            $library->books()->updateExistingPivot(
-                $book->id,
-                ['stock' => $pivot->stock - 1]
-            );
-    
-            // update borrowing
-            $borrowing->update([
-                'status' => 'approved',
-                'staff_id' => auth()->id(),
-            ]);
+        $borrowing->update([
+            'status' => 'approved',
+        ]);
 
-            $borrowing->user->notify(
-                new BorrowingStatusNotification($borrowing)
+        // kurangi stok
+        $borrowing->library
+            ->books()
+            ->updateExistingPivot(
+                $borrowing->book_id,
+                ['stock' => \DB::raw('stock - 1')]
             );
 
-        });
-    
-        return back()->with('success', 'Peminjaman disetujui & stok dikurangi');
+        // kirim notifikasi ke user
+        $borrowing->user->notify(
+            new BorrowingStatusNotification(
+                'approved',
+                $borrowing->book->title
+            )
+        );
+
+        return back()->with('success', 'Peminjaman disetujui');
     }
 
 
@@ -61,13 +48,16 @@ class BorrowingController extends Controller
     {
         $borrowing->update([
             'status' => 'rejected',
-            'staff_id' => auth()->id(),
         ]);
 
         $borrowing->user->notify(
-            new BorrowingStatusNotification($borrowing)
+            new BorrowingStatusNotification(
+                'rejected',
+                $borrowing->book->title
+            )
         );
 
         return back()->with('success', 'Peminjaman ditolak');
     }
+
 }

@@ -2,30 +2,34 @@
 
 namespace App\Notifications;
 
-use App\Models\Borrowing;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Notifications\Messages\DatabaseMessage;
 
 class BorrowingStatusNotification extends Notification
 {
     use Queueable;
 
-    public function __construct(public Borrowing $borrowing) {}
+    protected string $status;
+    protected string $bookTitle;
 
-    public function via($notifiable)
+    public function __construct(string $status, string $bookTitle)
+    {
+        $this->status = $status;
+        $this->bookTitle = $bookTitle;
+    }
+
+    public function via(object $notifiable): array
     {
         return ['database'];
     }
 
-    public function toArray($notifiable)
+    public function toDatabase(object $notifiable): array
     {
         return [
-            'book_title' => $this->borrowing->book->title,
-            'status'     => $this->borrowing->status,
-            'library'   => $this->borrowing->library->name,
-            'borrowing_id' => $this->borrowing->id,
+            'status' => $this->status, // approved | rejected
+            'book_title' => $this->bookTitle,
         ];
     }
 }

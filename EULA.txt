@@ -1,0 +1,11 @@
+DESCRIBE categories;
+SELECT * FROM categories;
+DESCRIBE libraries;
+SELECT * FROM libraries;
+DESCRIBE books;
+SELECT * FROM books;
+DESCRIBE book_library;
+SELECT * FROM book_library;
+DESCRIBE borrowings;
+SELECT * FROM borrowings;
+

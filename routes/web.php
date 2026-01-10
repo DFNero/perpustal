@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\BorrowingController;
 use App\Http\Controllers\UserBorrowingController;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Staff\BorrowingController as StaffBorrowingController;
 use Illuminate\Support\Facades\Route;
 
@@ -64,6 +65,17 @@ Route::patch('/staff/borrowings/{borrowing}/return',
     [BorrowingController::class, 'return']
 )->name('staff.borrowings.return');
 // staff end line
+
+// admin line
+Route::middleware(['auth', 'role:admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+
+        Route::get('/categories', [CategoryController::class, 'index'])
+            ->name('categories.index');
+    });
+// admin end line
 
 // Notifications 
 Route::post('/notifications/read', function () {
