@@ -1,11 +1,19 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
+// general
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BorrowingController;
 use App\Http\Controllers\UserBorrowingController;
+
+// admin
+use App\Http\Controllers\Admin\LibraryController;
 use App\Http\Controllers\Admin\CategoryController;
+
+// staff
 use App\Http\Controllers\Staff\BorrowingController as StaffBorrowingController;
+
+// utils
 use Illuminate\Support\Facades\Route;
 
 // public route guests
@@ -71,10 +79,54 @@ Route::middleware(['auth', 'role:admin'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
-
+        
+        // line categories
+        
         Route::get('/categories', [CategoryController::class, 'index'])
             ->name('categories.index');
+            // create
+        Route::get('/categories/create', [CategoryController::class, 'create'])
+            ->name('categories.create');
+            // simpan
+        Route::post('/categories', [CategoryController::class, 'store'])
+            ->name('categories.store');
+            // edit
+        Route::get('/categories/{category}/edit', [CategoryController::class, 'edit'])
+            ->name('categories.edit');
+            // update
+        Route::put('/categories/{category}', [CategoryController::class, 'update'])
+            ->name('categories.update');
+            // delete
+        Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])
+            ->name('categories.destroy');
+            
+        // end line categories
+        // 
+        // line library
+        
+        Route::get('/libraries', [LibraryController::class, 'index'])
+            ->name('libraries.index');
+            // create
+        Route::get('/libraries/create', [LibraryController::class, 'create'])
+            ->name('libraries.create');
+            // simpan
+        Route::post('/libraries', [LibraryController::class, 'store'])
+            ->name('libraries.store');
+            // edit
+        Route::get('/libraries/{library}/edit', [LibraryController::class, 'edit'])
+            ->name('libraries.edit');
+            // update
+        Route::put('/libraries/{library}', [LibraryController::class, 'update'])
+            ->name('libraries.update');
+            // delete
+        Route::delete('/libraries/{library}', [LibraryController::class, 'destroy'])    
+            ->name('libraries.destroy');
+            
+        // end line library
+
     });
+
+
 // admin end line
 
 // Notifications 

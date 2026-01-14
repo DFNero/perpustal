@@ -1,48 +1,31 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Manajemen Kategori
-        </h2>
-    </x-slot>
+@extends('admin.layout')
 
-    <div class="py-6">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+@section('title', 'Category List')
 
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6">
+@section('content')
+    <h2>Daftar Kategori</h2>
 
-                    <h3 class="text-lg font-semibold mb-4">
-                        Daftar Kategori
-                    </h3>
+    <a href="{{ route('admin.categories.create') }}">
+        + Tambah Kategori
+    </a>
 
-                    @if ($categories->count())
-                        <table class="w-full border text-sm">
-                            <thead class="bg-gray-100">
-                                <tr>
-                                    <th class="border px-3 py-2 text-left">#</th>
-                                    <th class="border px-3 py-2 text-left">Nama</th>
-                                    <th class="border px-3 py-2 text-left">Slug</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($categories as $category)
-                                    <tr>
-                                        <td class="border px-3 py-2">{{ $loop->iteration }}</td>
-                                        <td class="border px-3 py-2">{{ $category->name }}</td>
-                                        <td class="border px-3 py-2 text-gray-500">{{ $category->slug }}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    @else
-                        <div class="text-gray-500 text-sm">
-                            Belum ada kategori.
-                        </div>
-                    @endif
+    <ul>
+        @forelse ($categories as $category)
+            <li class="mb-2">
+                {{ $category->name }}
+                |
+                <a href="{{ route('admin.categories.edit', $category) }}">Edit</a>
 
-                </div>
-            </div>
-
-        </div>
-    </div>
-</x-app-layout>
+                <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" style="display:inline" onsubmit="return confirm('Hapus kategori ini?');">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" style="color: #c00; background:none; border:none; padding:0; cursor:pointer;">
+                        Hapus
+                    </button>
+                </form>
+            </li>
+        @empty
+            <li>Belum ada kategori</li>
+        @endforelse
+    </ul>
+@endsection
