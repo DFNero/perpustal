@@ -13,6 +13,7 @@
     <strong>Admin Panel</strong>
     <nav>
         <a href="{{ route('admin.categories.index') }}">Categories</a>
+        <a href="{{ route('admin.libraries.index') }}">Libraries</a>
     </nav>
 </header>
 

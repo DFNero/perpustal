@@ -126,6 +126,9 @@ Route::middleware(['auth', 'role:admin'])
         // end line library
         //
         // line book
+        
+        Route::get('/libraries/books', [LibraryBookController::class, 'allBooks'])
+            ->name('libraries.books.all');
 
         Route::get('/libraries/{library}/books', [LibraryBookController::class, 'index'])
             ->name('libraries.books.index');

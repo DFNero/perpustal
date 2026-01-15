@@ -1,22 +1,22 @@
-{{-- resources\views\admin\libraries\index.blade.php --}}
+{{-- resources\views\admin\libraries\books\all.blade.php --}}
 
 @extends('admin.layout')
 
-@section('title', 'Perpustakaan')
+@section('title', 'Kelola Buku')
 
 @section('content')
-    <h2>Daftar Perpustakaan</h2>
+    <h2>Kelola Buku per Perpustakaan</h2>
 
-    <a href="{{ route('admin.libraries.create') }}">+ Tambah Perpustakaan</a>
+    <p>Pilih perpustakaan untuk mengelola buku-bukunya:</p>
 
     @if($libraries->count())
         <table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse; margin-top:8px;">
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Nama</th>
+                    <th>Nama Perpustakaan</th>
                     <th>Alamat</th>
-                    <th>Koordinat</th>
+                    <th>Jumlah Buku</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
@@ -26,15 +26,9 @@
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $lib->name }}</td>
                         <td>{{ $lib->address }}</td>
-                        <td>{{ $lib->latitude }}, {{ $lib->longitude }}</td>
+                        <td>{{ $lib->books->count() }}</td>
                         <td>
                             <a href="{{ route('admin.libraries.books.index', $lib) }}">Kelola Buku</a>
-                            <a href="{{ route('admin.libraries.edit', $lib) }}">Edit</a>
-                            <form action="{{ route('admin.libraries.destroy', $lib) }}" method="POST" style="display:inline" onsubmit="return confirm('Hapus perpustakaan ini?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" style="color:#c00; background:none; border:none; padding:0; cursor:pointer;">Hapus</button>
-                            </form>
                         </td>
                     </tr>
                 @endforeach

@@ -10,6 +10,13 @@ use Illuminate\Support\Facades\DB;
 
 class LibraryBookController extends Controller
 {
+    public function allBooks()
+    {
+        // Show all libraries so admin can choose which one's books to manage
+        $libraries = Library::latest()->get();
+        return view('admin.libraries.books.all', compact('libraries'));
+    }
+
     public function index(Library $library)
     {
         // eager load books with pivot stock
