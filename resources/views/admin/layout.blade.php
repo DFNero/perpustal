@@ -1,3 +1,5 @@
+{{-- resources\views\admin\layout.blade.php --}}
+
 <!DOCTYPE html>
 <html lang="id">
 <head>

@@ -9,6 +9,7 @@ use App\Http\Controllers\UserBorrowingController;
 // admin
 use App\Http\Controllers\Admin\LibraryController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\LibraryBookController;
 
 // staff
 use App\Http\Controllers\Staff\BorrowingController as StaffBorrowingController;
@@ -123,7 +124,28 @@ Route::middleware(['auth', 'role:admin'])
             ->name('libraries.destroy');
             
         // end line library
+        //
+        // line book
 
+        Route::get('/libraries/{library}/books', [LibraryBookController::class, 'index'])
+            ->name('libraries.books.index');
+
+        Route::get('/libraries/{library}/books/create', [LibraryBookController::class, 'create'])
+            ->name('libraries.books.create');
+
+        Route::post('/libraries/{library}/books', [LibraryBookController::class, 'store'])
+            ->name('libraries.books.store');
+
+        Route::get('/libraries/{library}/books/{book}/edit', [LibraryBookController::class, 'edit'])
+            ->name('libraries.books.edit');
+
+        Route::put('/libraries/{library}/books/{book}', [LibraryBookController::class, 'update'])
+            ->name('libraries.books.update');
+
+        Route::delete('/libraries/{library}/books/{book}', [LibraryBookController::class, 'destroy'])
+            ->name('libraries.books.destroy');
+
+        // end line book
     });
 
 

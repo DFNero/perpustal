@@ -1,0 +1,205 @@
+# Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException - Method Not Allowed
+
+The GET method is not supported for route admin/libraries/books. Supported methods: PUT, DELETE.
+
+PHP 8.3.16
+Laravel 12.44.0
+127.0.0.1:8000
+
+## Stack Trace
+
+0 - vendor\laravel\framework\src\Illuminate\Routing\AbstractRouteCollection.php:131
+1 - vendor\laravel\framework\src\Illuminate\Routing\AbstractRouteCollection.php:116
+2 - vendor\laravel\framework\src\Illuminate\Routing\AbstractRouteCollection.php:42
+3 - vendor\laravel\framework\src\Illuminate\Routing\RouteCollection.php:184
+4 - vendor\laravel\framework\src\Illuminate\Routing\Router.php:777
+5 - vendor\laravel\framework\src\Illuminate\Routing\Router.php:764
+6 - vendor\laravel\framework\src\Illuminate\Routing\Router.php:753
+7 - vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php:200
+8 - vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:180
+9 - vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\TransformsRequest.php:21
+10 - vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull.php:31
+11 - vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:219
+12 - vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\TransformsRequest.php:21
+13 - vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\TrimStrings.php:51
+14 - vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:219
+15 - vendor\laravel\framework\src\Illuminate\Http\Middleware\ValidatePostSize.php:27
+16 - vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:219
+17 - vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance.php:109
+18 - vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:219
+19 - vendor\laravel\framework\src\Illuminate\Http\Middleware\HandleCors.php:48
+20 - vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:219
+21 - vendor\laravel\framework\src\Illuminate\Http\Middleware\TrustProxies.php:58
+22 - vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:219
+23 - vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks.php:22
+24 - vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:219
+25 - vendor\laravel\framework\src\Illuminate\Http\Middleware\ValidatePathEncoding.php:26
+26 - vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:219
+27 - vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:137
+28 - vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php:175
+29 - vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php:144
+30 - vendor\laravel\framework\src\Illuminate\Foundation\Application.php:1220
+31 - public\index.php:20
+32 - vendor\laravel\framework\src\Illuminate\Foundation\resources\server.php:23
+
+## Request
+
+GET /admin/libraries/books
+
+## Headers
+
+* **host**: 127.0.0.1:8000
+* **user-agent**: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:148.0) Gecko/20100101 Firefox/148.0
+* **accept**: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+* **accept-language**: en-US,en;q=0.9
+* **accept-encoding**: gzip, deflate, br, zstd
+* **connection**: keep-alive
+* **cookie**: XSRF-TOKEN=eyJpdiI6Inh2SDB3c012dEcrRU9DdGg2UzBZRmc9PSIsInZhbHVlIjoiV2xpODRLMGhlUUJaei8vN0MrdkRVMmwzZzVERGNsckVOQ01DMnFOVnBNdS9VbWxINjdCVzQ3dU56ZkU0clhaejczRG4remxZb096TW04M0tZaU9VUWRwdDdHaFk2TzQzME15NEk5YXR3QkpQN0p2VC82cmJEeFVVTXVGa204NnAiLCJtYWMiOiI4Nzk5YmFmMTViOGY3MGY1MzcyNTFhNmY3NjQ3ZmQxMjJhZTk0NWYzYzFkMDA1ZTY3NmYxOTFkM2QxNjQ0Y2Q5IiwidGFnIjoiIn0%3D; laravel-session=eyJpdiI6InhGcms4WHFEdmlIVXpIQmJVbVBoQWc9PSIsInZhbHVlIjoiN2F3N2RhZ2VYZHhWclJ2d2E0UUZibmpUWktJWU0yRjk5eGhrVVAvUHlMQVowcjFVOWdHQlUvNTJQZFZjeHZ6aWVlRkV3UUtHb29qMHo0UDNab29CTUo3ZDNNZ1d3S2NMSWRsSGtGL2dlTGJ6bnJDTmNRalZzbTgwNDZPUy9GcGsiLCJtYWMiOiIxZmQ4ZTY2OGVjMTU1MGU4MjA1Mzc4MDVkNTY2MWJkMmVjZDJhNTZhOGM0ODJjMTgyY2I3NWU0NGEzZjgxMzdmIiwidGFnIjoiIn0%3D
+* **upgrade-insecure-requests**: 1
+* **sec-fetch-dest**: document
+* **sec-fetch-mode**: navigate
+* **sec-fetch-site**: none
+* **sec-fetch-user**: ?1
+* **priority**: u=0, i
+
+## Route Context
+
+No routing data available.
+
+## Route Parameters
+
+No route parameter data available.
+
+## Database Queries
+
+No database queries detected.
+
+
+  GET|HEAD  / ........................................................................................................
+  GET|HEAD  about ....................................................................................................
+  GET|HEAD  admin/categories ................................. admin.categories.index › Admin\CategoryController@index
+  POST      admin/categories ................................. admin.categories.store › Admin\CategoryController@store
+  GET|HEAD  admin/categories/create ........................ admin.categories.create › Admin\CategoryController@create
+  PUT       admin/categories/{category} .................... admin.categories.update › Admin\CategoryController@update
+  DELETE    admin/categories/{category} .................. admin.categories.destroy › Admin\CategoryController@destroy
+  GET|HEAD  admin/categories/{category}/edit ................... admin.categories.edit › Admin\CategoryController@edit
+  GET|HEAD  admin/dashboard .......................................................................... admin.dashboard
+  GET|HEAD  admin/libraries .................................... admin.libraries.index › Admin\LibraryController@index
+  POST      admin/libraries .................................... admin.libraries.store › Admin\LibraryController@store
+  GET|HEAD  admin/libraries/create ........................... admin.libraries.create › Admin\LibraryController@create
+  PUT       admin/libraries/{library} ........................ admin.libraries.update › Admin\LibraryController@update
+  DELETE    admin/libraries/{library} ...................... admin.libraries.destroy › Admin\LibraryController@destroy
+  GET|HEAD  admin/libraries/{library}/books .......... admin.libraries.books.index › Admin\LibraryBookController@index
+  POST      admin/libraries/{library}/books .......... admin.libraries.books.store › Admin\LibraryBookController@store
+  GET|HEAD  admin/libraries/{library}/books/create . admin.libraries.books.create › Admin\LibraryBookController@create
+  PUT       admin/libraries/{library}/books/{book} . admin.libraries.books.update › Admin\LibraryBookController@update
+  DELETE    admin/libraries/{library}/books/{book} admin.libraries.books.destroy › Admin\LibraryBookController@destroy
+  GET|HEAD  admin/libraries/{library}/books/{book}/edit admin.libraries.books.edit › Admin\LibraryBookController@edit
+  GET|HEAD  admin/libraries/{library}/edit ....................... admin.libraries.edit › Admin\LibraryController@edit
+  GET|HEAD  books ................................................................. books.index › BookController@index
+  GET|HEAD  books/{book} ............................................................ books.show › BookController@show
+  POST      borrow/{book} ................................................... borrow.store › BorrowingController@store
+  GET|HEAD  confirm-password .............................. password.confirm › Auth\ConfirmablePasswordController@show
+  POST      confirm-password ................................................ Auth\ConfirmablePasswordController@store
+  GET|HEAD  dashboard ...................................................................................... dashboard
+  POST      email/verification-notification ... verification.send › Auth\EmailVerificationNotificationController@store
+  GET|HEAD  forgot-password ............................... password.request › Auth\PasswordResetLinkController@create
+  POST      forgot-password .................................. password.email › Auth\PasswordResetLinkController@store
+  GET|HEAD  login ................................................. login › Auth\AuthenticatedSessionController@create
+  POST      login .......................................................... Auth\AuthenticatedSessionController@store
+  POST      logout .............................................. logout › Auth\AuthenticatedSessionController@destroy
+  GET|HEAD  my-borrowings ...................................... user.borrowings.index › UserBorrowingController@index
+  POST      notifications/read .......................................................................................
+  PUT       password ................................................ password.update › Auth\PasswordController@update
+  GET|HEAD  profile ............................................................ profile.edit › ProfileController@edit
+  PATCH     profile ........................................................ profile.update › ProfileController@update
+  DELETE    profile ...................................................... profile.destroy › ProfileController@destroy
+  GET|HEAD  register ................................................. register › Auth\RegisteredUserController@create
+  POST      register ............................................................. Auth\RegisteredUserController@store
+  POST      reset-password ......................................... password.store › Auth\NewPasswordController@store
+  GET|HEAD  reset-password/{token} ................................ password.reset › Auth\NewPasswordController@create
+  GET|HEAD  staff/borrowings ................................ staff.borrowings.index › Staff\BorrowingController@index
+  PATCH     staff/borrowings/{borrowing}/approve ........ staff.borrowings.approve › Staff\BorrowingController@approve
+  PATCH     staff/borrowings/{borrowing}/reject ........... staff.borrowings.reject › Staff\BorrowingController@reject
+  PATCH     staff/borrowings/{borrowing}/return ................. staff.borrowings.return › BorrowingController@return
+  GET|HEAD  staff/dashboard .......................................................................... staff.dashboard
+  GET|HEAD  storage/{path} ............................................................................. storage.local
+  GET|HEAD  up .......................................................................................................
+  GET|HEAD  verify-email ................................ verification.notice › Auth\EmailVerificationPromptController
+  GET|HEAD  verify-email/{id}/{hash} ................................ verification.verify › Auth\VerifyEmailController
+
+// admin line
+Route::middleware(['auth', 'role:admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+        
+        // line categories
+        
+        Route::get('/categories', [CategoryController::class, 'index'])
+            ->name('categories.index');
+            // create
+        Route::get('/categories/create', [CategoryController::class, 'create'])
+            ->name('categories.create');
+            // simpan
+        Route::post('/categories', [CategoryController::class, 'store'])
+            ->name('categories.store');
+            // edit
+        Route::get('/categories/{category}/edit', [CategoryController::class, 'edit'])
+            ->name('categories.edit');
+            // update
+        Route::put('/categories/{category}', [CategoryController::class, 'update'])
+            ->name('categories.update');
+            // delete
+        Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])
+            ->name('categories.destroy');
+            
+        // end line categories
+        // 
+        // line library
+        
+        Route::get('/libraries', [LibraryController::class, 'index'])
+            ->name('libraries.index');
+            // create
+        Route::get('/libraries/create', [LibraryController::class, 'create'])
+            ->name('libraries.create');
+            // simpan
+        Route::post('/libraries', [LibraryController::class, 'store'])
+            ->name('libraries.store');
+            // edit
+        Route::get('/libraries/{library}/edit', [LibraryController::class, 'edit'])
+            ->name('libraries.edit');
+            // update
+        Route::put('/libraries/{library}', [LibraryController::class, 'update'])
+            ->name('libraries.update');
+            // delete
+        Route::delete('/libraries/{library}', [LibraryController::class, 'destroy'])    
+            ->name('libraries.destroy');
+            
+        // end line library
+        //
+        // line book
+
+        Route::get('/libraries/{library}/books', [LibraryBookController::class, 'index'])
+            ->name('libraries.books.index');
+
+        Route::get('/libraries/{library}/books/create', [LibraryBookController::class, 'create'])
+            ->name('libraries.books.create');
+
+        Route::post('/libraries/{library}/books', [LibraryBookController::class, 'store'])
+            ->name('libraries.books.store');
+
+        Route::get('/libraries/{library}/books/{book}/edit', [LibraryBookController::class, 'edit'])
+            ->name('libraries.books.edit');
+
+        Route::put('/libraries/{library}/books/{book}', [LibraryBookController::class, 'update'])
+            ->name('libraries.books.update');
+
+        Route::delete('/libraries/{library}/books/{book}', [LibraryBookController::class, 'destroy'])
+            ->name('libraries.books.destroy');
+
+        // end line book
+    });
+
+
+// admin end line
