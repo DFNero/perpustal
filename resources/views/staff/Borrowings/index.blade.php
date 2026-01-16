@@ -1,11 +1,36 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl">
-            Pengajuan Peminjaman
-        </h2>
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl">
+                Pengajuan Peminjaman (Pending)
+            </h2>
+            <a href="{{ route('staff.borrowings.approved') }}" class="text-blue-600 hover:underline text-sm">
+                📚 Lihat Pengembalian →
+            </a>
+        </div>
     </x-slot>
 
     <div class="p-6 space-y-4">
+        @if (session('success'))
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                {{ session('error') }}
+            </div>
+        @endif
+
+        @if ($errors->any())
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                @foreach ($errors->all() as $error)
+                    <p>{{ $error }}</p>
+                @endforeach
+            </div>
+        @endif
+
         @forelse ($borrowings as $b)
             <div class="border p-4 rounded flex justify-between items-center">
                 <div>
@@ -45,7 +70,9 @@
                 </div>
             </div>
         @empty
-            <p>Tidak ada pengajuan</p>
+            <div class="text-center py-8 text-gray-500">
+                <p>Tidak ada pengajuan peminjaman yang menunggu.</p>
+            </div>
         @endforelse
     </div>
 </x-app-layout>

@@ -19,6 +19,25 @@ class BorrowingController extends Controller
         return view('borrowings.index', compact('borrowings'));
     }
 
+    public function notifications()
+    {
+        $user = Auth::user();
+        $notifications = $user->notifications()->latest()->get();
+
+        return view('notifications.index', compact('notifications'));
+    }
+
+    public function markNotificationAsRead($notificationId)
+    {
+        $notification = Auth::user()->notifications()->find($notificationId);
+        
+        if ($notification) {
+            $notification->markAsRead();
+        }
+
+        return back()->with('success', 'Notifikasi ditandai sudah dibaca.');
+    }
+
     public function store(Request $request, Book $book)
     {
         $data = $request->validate([

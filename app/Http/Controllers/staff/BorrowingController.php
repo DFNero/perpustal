@@ -20,6 +20,16 @@ class BorrowingController extends Controller
         return view('staff.borrowings.index', compact('borrowings'));
     }
 
+    public function approved()
+    {
+        $borrowings = Borrowing::with(['user', 'book', 'library'])
+            ->where('status', 'approved')
+            ->latest()
+            ->get();
+
+        return view('staff.borrowings.approved', compact('borrowings'));
+    }
+
     public function approve(Borrowing $borrowing)
     {
         // Check if borrowing is still pending
@@ -98,6 +108,53 @@ class BorrowingController extends Controller
             });
 
             return back()->with('success', 'Peminjaman ditolak.');
+        } catch (\Exception $e) {
+            return back()->withErrors([
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function markAsReturned(Borrowing $borrowing)
+    {
+        // Check if borrowing is approved
+        if ($borrowing->status !== 'approved') {
+            return back()->withErrors([
+                'error' => 'Hanya peminjaman yang disetujui yang bisa dikembalikan.'
+            ]);
+        }
+
+        try {
+            DB::transaction(function () use ($borrowing) {
+                // Get current stock
+                $pivot = $borrowing->library->books()
+                    ->where('books.id', $borrowing->book_id)
+                    ->first();
+
+                if (!$pivot) {
+                    throw new \Exception('Buku tidak tersedia di perpustakaan ini.');
+                }
+
+                // Increment stock
+                $borrowing->book->libraries()
+                    ->updateExistingPivot(
+                        $borrowing->library_id,
+                        ['stock' => DB::raw('stock + 1')]
+                    );
+
+                // Update borrowing record with return info
+                $borrowing->update([
+                    'status' => 'returned',
+                    'return_date' => now()->toDateString(),
+                ]);
+
+                // Notify user
+                $borrowing->user->notify(
+                    new BorrowingStatusNotification('returned', $borrowing->book->title)
+                );
+            });
+
+            return back()->with('success', 'Buku berhasil dikembalikan dan stok bertambah 1.');
         } catch (\Exception $e) {
             return back()->withErrors([
                 'error' => $e->getMessage()

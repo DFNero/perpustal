@@ -14,10 +14,21 @@ class Borrowing extends Model
         'book_id',
         'library_id',
         'status',
+        'staff_id',
         'borrow_date',
         'return_date',
         'notes',
     ];
+
+    protected $dates = [
+        'borrow_date',
+        'return_date',
+    ];
+
+    public function staff()
+    {
+        return $this->belongsTo(User::class, 'staff_id');
+    }
 
     public function user()
     {

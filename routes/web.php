@@ -61,13 +61,19 @@ Route::post('/borrow/{book}', [BorrowingController::class, 'store'])
 // books end line
 
 // borrowings line (user)
-Route::get('/borrowings', [BorrowingController::class, 'index'])
-    ->name('borrowings.index')
-    ->middleware('auth');
-
-Route::post('/borrow/{book}', [BorrowingController::class, 'store'])
-    ->name('borrow.store')
-    ->middleware('auth');
+Route::middleware('auth')->group(function () {
+    Route::get('/borrowings', [BorrowingController::class, 'index'])
+        ->name('borrowings.index');
+    
+    Route::get('/notifications', [BorrowingController::class, 'notifications'])
+        ->name('notifications.index');
+    
+    Route::post('/notifications/{notification}/read', [BorrowingController::class, 'markNotificationAsRead'])
+        ->name('notifications.read');
+    
+    Route::post('/borrow/{book}', [BorrowingController::class, 'store'])
+        ->name('borrow.store');
+});
 // borrowings end line
 
 // staff line
@@ -79,12 +85,18 @@ Route::middleware(['auth', 'role:staff'])
         // line borrowings
         Route::get('/borrowings', [StaffBorrowingController::class, 'index'])
             ->name('borrowings.index');
+        
+        Route::get('/borrowings/approved', [StaffBorrowingController::class, 'approved'])
+            ->name('borrowings.approved');
 
         Route::patch('/borrowings/{borrowing}/approve', [StaffBorrowingController::class, 'approve'])
             ->name('borrowings.approve');
 
         Route::patch('/borrowings/{borrowing}/reject', [StaffBorrowingController::class, 'reject'])
             ->name('borrowings.reject');
+        
+        Route::patch('/borrowings/{borrowing}/return', [StaffBorrowingController::class, 'markAsReturned'])
+            ->name('borrowings.return');
     });
         // end line borrowings
 

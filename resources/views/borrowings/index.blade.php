@@ -2,9 +2,14 @@
 
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl">
-            Riwayat Peminjaman Saya
-        </h2>
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl">
+                Riwayat Peminjaman Saya
+            </h2>
+            <a href="{{ route('notifications.index') }}" class="text-blue-600 hover:underline text-sm">
+                📢 Notifikasi
+            </a>
+        </div>
     </x-slot>
 
     <div class="p-6 space-y-4">
