@@ -179,5 +179,13 @@ Route::post('/notifications/read', function () {
 })->middleware('auth');
 // notifications end line
 
+// borrowings line user
+Route::middleware(['auth'])
+    ->group(function () {
+        Route::post('/borrowings', [BorrowingController::class, 'store'])
+            ->name('borrowings.store');
+    });
+// borrowings line end user
+
 
 require __DIR__.'/auth.php';

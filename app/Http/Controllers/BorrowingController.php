@@ -2,49 +2,41 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Book;
 use App\Models\Borrowing;
+use App\Models\Book;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class BorrowingController extends Controller
 {
-    public function store(Book $book, Request $request)
+    public function store(Request $request, Book $book)
     {
-        Borrowing::create([
-            'user_id' => auth()->id(),
-            'book_id' => $book->id,
-            'library_id' => $request->library_id,
-            'status' => 'pending',
+        $data = $request->validate([
+            'library_id' => 'required|exists:libraries,id',
         ]);
 
-        return back()->with('success', 'Peminjaman berhasil diajukan');
-    }
-    
-    public function return(Borrowing $borrowing)
-    {
-        // Guard: hanya borrowing approved
-        if ($borrowing->status !== 'approved') {
-            return back()->with('error', 'Borrowing belum approved');
-        }
-    
-        DB::transaction(function () use ($borrowing) {
-    
-            // update status borrowing
-            $borrowing->update([
-                'status' => 'returned',
-                'return_date' => now(),
+        // cek stok buku di library (pivot)
+        $stock = $book->libraries()
+            ->where('library_id', $data['library_id'])
+            ->first()
+            ?->pivot
+            ?->stock ?? 0;
+
+        if ($stock <= 0) {
+            return back()->withErrors([
+                'stock' => 'Stok buku di perpustakaan ini habis.',
             ]);
-    
-            // tambah stok buku
-            DB::table('book_library')
-                ->where('book_id', $borrowing->book_id)
-                ->where('library_id', $borrowing->library_id)
-                ->increment('stock');
-        });
-    
-        return back()->with('success', 'Buku berhasil dikembalikan');
+        }
+
+        Borrowing::create([
+            'user_id'    => Auth::id(),
+            'book_id'    => $book->id,
+            'library_id' => $data['library_id'],
+            'status'     => 'pending',
+        ]);
+
+        return redirect()
+            ->route('user.borrowings.index')
+            ->with('success', 'Pengajuan peminjaman berhasil dikirim.');
     }
 }
-
-
