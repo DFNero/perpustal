@@ -101,9 +101,6 @@ Route::middleware(['auth', 'role:staff'])
         // end line borrowings
 
 
-Route::patch('/staff/borrowings/{borrowing}/return', 
-    [BorrowingController::class, 'return']
-)->name('staff.borrowings.return');
 // staff end line
 
 // admin line

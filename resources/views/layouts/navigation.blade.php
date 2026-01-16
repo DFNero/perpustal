@@ -48,7 +48,13 @@
                         @forelse (auth()->user()->unreadNotifications as $notif)
                             <div class="p-3 border-b text-sm">
                                 Buku <b>{{ $notif->data['book_title'] }}</b>
-                                {{ $notif->data['status'] === 'approved' ? 'disetujui' : 'ditolak' }}
+                                @if ($notif->data['status'] === 'approved')
+                                    disetujui
+                                @elseif ($notif->data['status'] === 'rejected')
+                                    ditolak
+                                @elseif ($notif->data['status'] === 'returned')
+                                    sudah dikembalikan
+                                @endif
                             </div>
                         @empty
                             <div class="p-3 text-sm text-gray-500">
