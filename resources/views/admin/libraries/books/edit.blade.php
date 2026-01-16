@@ -24,7 +24,10 @@
 
         <div>
             <label>Stok Saat Ini</label><br>
-            <input type="number" name="stock" value="{{ old('stock', $book->pivot->stock) }}" required min="0">
+            <input type="number" name="stock" value="{{ old('stock', $book->pivot?->stock ?? 0) }}" required min="0">
+            @error('stock')
+                <span style="color: #c00;">{{ $message }}</span>
+            @enderror
         </div>
 
         <br>

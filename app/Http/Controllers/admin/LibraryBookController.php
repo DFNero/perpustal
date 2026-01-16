@@ -67,15 +67,10 @@ class LibraryBookController extends Controller
 
     public function edit(Library $library, Book $book)
     {
-        // ensure pivot exists
-        $pivot = $library->books()->where('books.id', $book->id)->first();
-        if (! $pivot) {
-            return redirect()->route('admin.libraries.books.index', $library)
-                ->with('error', 'Buku tidak ditemukan di perpustakaan ini.');
-        }
-
-        $stock = $pivot->pivot->stock;
-        return view('admin.libraries.books.edit', compact('library', 'book', 'stock'));
+        // Load the book with pivot data
+        $book = $library->books()->where('books.id', $book->id)->firstOrFail();
+        
+        return view('admin.libraries.books.edit', compact('library', 'book'));
     }
 
     public function update(Request $request, Library $library, Book $book)
