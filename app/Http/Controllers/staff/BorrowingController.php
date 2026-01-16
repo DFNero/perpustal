@@ -4,78 +4,104 @@ namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
 use App\Models\Borrowing;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Notifications\BorrowingStatusNotification;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class BorrowingController extends Controller
 {
     public function index()
     {
-        $borrowings = Borrowing::where('status', 'pending')->with(['book','user','library'])->get();
-        return view('staff.Borrowings.index', compact('borrowings'));
+        $borrowings = Borrowing::with(['user', 'book', 'library'])
+            ->where('status', 'pending')
+            ->latest()
+            ->get();
+
+        return view('staff.borrowings.index', compact('borrowings'));
     }
 
     public function approve(Borrowing $borrowing)
     {
-        // ensure staff only
-        $this->authorize('approve', $borrowing); // optional if you setup policies
-
-        DB::transaction(function () use ($borrowing) {
-            // refresh relations
-            $borrowing->load('book', 'library', 'user');
-
-            // get pivot row for book-library stock
-            $pivot = $borrowing->library->books()
-                ->where('books.id', $borrowing->book_id)
-                ->first();
-
-            if (! $pivot) {
-                throw new \Exception('Book not available in selected library.');
-            }
-
-            $stock = (int) $pivot->pivot->stock;
-
-            if ($stock <= 0) {
-                throw new \Exception('Stock habis. Tidak bisa approve.');
-            }
-
-            // decrement stock
-            $newStock = $stock - 1;
-            $borrowing->library->books()->updateExistingPivot($borrowing->book_id, [
-                'stock' => $newStock,
-                'updated_at' => now(),
+        // Check if borrowing is still pending
+        if ($borrowing->status !== 'pending') {
+            return back()->withErrors([
+                'error' => 'Pengajuan peminjaman ini sudah diproses sebelumnya.'
             ]);
+        }
 
-            // update borrowing record
-            $borrowing->status = 'approved';
-            $borrowing->staff_id = auth()->id();
-            $borrowing->borrow_date = now()->toDateString();
-            $borrowing->save();
+        try {
+            DB::transaction(function () use ($borrowing) {
+                // Get current stock
+                $pivot = $borrowing->library->books()
+                    ->where('books.id', $borrowing->book_id)
+                    ->first();
 
-            // notify user (database notification)
-            $borrowing->user->notify(new BorrowingStatusNotification([
-                'borrowing_id' => $borrowing->id,
-                'book_title' => $borrowing->book->title,
-                'status' => 'approved',
-            ]));
-        });
+                if (!$pivot) {
+                    throw new \Exception('Buku tidak tersedia di perpustakaan ini.');
+                }
 
-        return redirect()->back()->with('success', 'Pengajuan disetujui dan stok dikurangi.');
+                $stock = (int) $pivot->pivot->stock;
+
+                if ($stock <= 0) {
+                    throw new \Exception('Stok buku habis. Tidak bisa menyetujui peminjaman.');
+                }
+
+                // Decrement stock
+                $borrowing->book->libraries()
+                    ->updateExistingPivot(
+                        $borrowing->library_id,
+                        ['stock' => DB::raw('stock - 1')]
+                    );
+
+                // Update borrowing record with staff info and borrow date
+                $borrowing->update([
+                    'status' => 'approved',
+                    'staff_id' => Auth::id(),
+                    'borrow_date' => now()->toDateString(),
+                ]);
+
+                // Notify user
+                $borrowing->user->notify(
+                    new BorrowingStatusNotification('approved', $borrowing->book->title)
+                );
+            });
+
+            return back()->with('success', 'Peminjaman disetujui dan stok berkurang 1.');
+        } catch (\Exception $e) {
+            return back()->withErrors([
+                'error' => $e->getMessage()
+            ]);
+        }
     }
 
     public function reject(Borrowing $borrowing)
     {
-        $borrowing->status = 'rejected';
-        $borrowing->staff_id = auth()->id();
-        $borrowing->save();
+        // Check if borrowing is still pending
+        if ($borrowing->status !== 'pending') {
+            return back()->withErrors([
+                'error' => 'Pengajuan peminjaman ini sudah diproses sebelumnya.'
+            ]);
+        }
 
-        $borrowing->user->notify(new BorrowingStatusNotification([
-            'borrowing_id' => $borrowing->id,
-            'book_title' => $borrowing->book->title,
-            'status' => 'rejected',
-        ]));
+        try {
+            DB::transaction(function () use ($borrowing) {
+                // Update borrowing record with staff info
+                $borrowing->update([
+                    'status' => 'rejected',
+                    'staff_id' => Auth::id(),
+                ]);
 
-        return redirect()->back()->with('success', 'Pengajuan ditolak.');
+                // Notify user
+                $borrowing->user->notify(
+                    new BorrowingStatusNotification('rejected', $borrowing->book->title)
+                );
+            });
+
+            return back()->with('success', 'Peminjaman ditolak.');
+        } catch (\Exception $e) {
+            return back()->withErrors([
+                'error' => $e->getMessage()
+            ]);
+        }
     }
 }

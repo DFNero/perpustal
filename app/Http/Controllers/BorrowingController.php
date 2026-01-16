@@ -9,6 +9,16 @@ use Illuminate\Support\Facades\Auth;
 
 class BorrowingController extends Controller
 {
+    public function index()
+    {
+        $borrowings = Borrowing::with(['book', 'library'])
+            ->where('user_id', Auth::id())
+            ->latest()
+            ->get();
+
+        return view('borrowings.index', compact('borrowings'));
+    }
+
     public function store(Request $request, Book $book)
     {
         $data = $request->validate([

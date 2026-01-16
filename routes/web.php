@@ -27,22 +27,23 @@ Route::get('/about', fn () => view('about'));
 Route::middleware(['auth'])->group(function () {
 
     // default roles user ke dashboard
-    Route::view('/dashboard', 'dashboard')->name('dashboard');
+    Route::view('/dashboard', 'dashboard')
+        ->middleware('role:user')
+        ->name('dashboard');
 
     // admin roles ke dashboard
     Route::view('/admin/dashboard', 'admin.dashboard')
-        ->middleware(['auth'])
+        ->middleware('role:admin')
         ->name('admin.dashboard');
 
     // staff roles ke dashboard
     Route::view('/staff/dashboard', 'staff.dashboard')
-        ->middleware(['auth'])
+        ->middleware('role:staff')
         ->name('staff.dashboard');
 
     // User peminjaman
     Route::get('/my-borrowings', [UserBorrowingController::class, 'index'])
         ->name('user.borrowings.index');
-
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -59,17 +60,34 @@ Route::post('/borrow/{book}', [BorrowingController::class, 'store'])
     ->middleware('auth');
 // books end line
 
+// borrowings line (user)
+Route::get('/borrowings', [BorrowingController::class, 'index'])
+    ->name('borrowings.index')
+    ->middleware('auth');
+
+Route::post('/borrow/{book}', [BorrowingController::class, 'store'])
+    ->name('borrow.store')
+    ->middleware('auth');
+// borrowings end line
+
 // staff line
-Route::middleware(['auth'])->prefix('staff')->group(function () {
-    Route::get('/borrowings', [StaffBorrowingController::class, 'index'])
-        ->name('staff.borrowings.index');
-    
-    Route::patch('/borrowings/{borrowing}/approve', [StaffBorrowingController::class, 'approve'])
-        ->name('staff.borrowings.approve');
-    
-    Route::patch('/borrowings/{borrowing}/reject', [StaffBorrowingController::class, 'reject'])
-        ->name('staff.borrowings.reject');
-});
+Route::middleware(['auth', 'role:staff'])
+    ->prefix('staff')
+    ->name('staff.')
+    ->group(function () {
+
+        // line borrowings
+        Route::get('/borrowings', [StaffBorrowingController::class, 'index'])
+            ->name('borrowings.index');
+
+        Route::patch('/borrowings/{borrowing}/approve', [StaffBorrowingController::class, 'approve'])
+            ->name('borrowings.approve');
+
+        Route::patch('/borrowings/{borrowing}/reject', [StaffBorrowingController::class, 'reject'])
+            ->name('borrowings.reject');
+    });
+        // end line borrowings
+
 
 Route::patch('/staff/borrowings/{borrowing}/return', 
     [BorrowingController::class, 'return']

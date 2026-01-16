@@ -11,11 +11,11 @@ class RoleMiddleware
     public function handle(Request $request, Closure $next, string $role): Response
     {
         if (! auth()->check()) {
-            abort(403);
+            return redirect()->route('login')->with('error', 'Anda harus login terlebih dahulu.');
         }
 
         if (auth()->user()->role !== $role) {
-            abort(403, 'Unauthorized.');
+            abort(403, 'Anda tidak memiliki akses ke halaman ini.');
         }           
 
         return $next($request);
