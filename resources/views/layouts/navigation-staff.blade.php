@@ -122,6 +122,16 @@
             class="w-64 bg-gray-900 text-gray-100 flex flex-col fixed md:static inset-y-0 left-0 mt-16 md:mt-0 z-30 md:z-0 shadow-lg"
         >
             <nav class="flex-1 px-4 py-6 space-y-2">
+                <a href="{{ route('staff.books.create') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg {{ request()->routeIs('staff.books.create') ? 'bg-orange-600' : 'hover:bg-gray-800' }} transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>
+                    <span class="font-medium">Tambah Buku</span>
+                </a>
+
+                <a href="{{ route('staff.libraries.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg {{ request()->routeIs('staff.libraries.*') ? 'bg-orange-600' : 'hover:bg-gray-800' }} transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-building2"><rect width="12" height="12" x="2" y="10"/><rect width="4" height="5" x="14" y="2"/><path d="M18 2v5h4v13H2"/></svg>
+                    <span class="font-medium">Perpustakaan</span>
+                </a>
+
                 <a href="{{ route('staff.borrowings.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg {{ request()->routeIs('staff.borrowings.index') ? 'bg-orange-600' : 'hover:bg-gray-800' }} transition">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                     <span class="font-medium">Pending</span>

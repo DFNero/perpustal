@@ -1,0 +1,112 @@
+Staff Book Management Feature - Added January 17, 2026
+========================================================
+
+OVERVIEW:
+Staff members can now add and edit books in the system. They can only perform these actions:
+- View all books (Books list page)
+- Create new books
+- Edit existing books
+- Cannot delete books (Admin only)
+
+WHAT STAFF CANNOT DO:
+- Cannot manage categories (Admin only)
+- Cannot manage libraries (Admin only)
+- Cannot delete books (Admin only)
+- Cannot see admin dashboard or admin controls
+
+FILES CREATED:
+=============
+
+1. app/Http/Controllers/Staff/BookController.php
+   - Methods: index(), create(), store(), edit(), update()
+   - Validates book data (title, author, publisher, year, ISBN, category, description)
+   - Handles library assignment for each book
+   - Uses sync() to update library relationships
+
+2. resources/views/staff/books/index.blade.php
+   - Displays table of all books with columns: #, Title, Author, Category, Libraries, Actions
+   - Shows count of libraries book is assigned to
+   - Action: Edit button (no delete)
+   - Header with "+ Tambah Buku" button
+   - Success message on book creation/update
+
+3. resources/views/staff/books/create.blade.php
+   - Form with fields: Title, Author, Publisher, Year, ISBN, Category, Description
+   - Multi-select checkboxes for library assignment (required, minimum 1)
+   - Validation error display
+   - Form values preserved on error (old() helper)
+   - Cancel button to return to books list
+
+4. resources/views/staff/books/edit.blade.php
+   - Same as create form but with pre-filled data from $book model
+   - Shows book title in header
+   - Displays currently assigned libraries with checkboxes checked
+   - Save button says "Simpan Perubahan"
+
+FILES MODIFIED:
+==============
+
+1. routes/web.php
+   - Added import: use App\Http\Controllers\Staff\BookController as StaffBookController;
+   - Added staff book routes under staff middleware group:
+     * GET  /staff/books (index)
+     * GET  /staff/books/create (create form)
+     * POST /staff/books (store)
+     * GET  /staff/books/{book}/edit (edit form)
+     * PATCH /staff/books/{book} (update)
+   - NO DELETE ROUTE (intentionally omitted)
+
+2. resources/views/layouts/navigation-staff.blade.php
+   - Added "Books" menu item to staff sidebar
+   - Icon: lucide-book
+   - Active state: uses orange-600 when on staff.books.* routes
+   - Positioned before Pending/Approved borrowing links
+
+WORKFLOW:
+=========
+
+Creating a Book:
+1. Staff clicks "Books" in sidebar → Goes to books.index
+2. Clicks "+ Tambah Buku" button
+3. Fills form with book details
+4. Selects one or more libraries to assign the book to
+5. Submits form → Book created with initial stock of 1 per library
+6. Redirected to books list with success message
+
+Editing a Book:
+1. Staff views books list (staff.books.index)
+2. Clicks "Edit" button next to book
+3. Form shows current book data + currently assigned libraries
+4. Can change any book field or reassign libraries
+5. Submits form
+6. Libraries are synced (old ones removed, new ones added)
+7. Redirected to books list with success message
+
+Validation:
+- Title: required, string, max 255
+- Author: required, string, max 255
+- Publisher: required, string, max 255
+- Year: required, integer, 1900 to current year
+- ISBN: optional, string, max 20
+- Category: required (must exist in categories table)
+- Description: optional, string
+- Libraries: required, array with minimum 1 library
+
+Error Handling:
+- Validation errors displayed in red boxes at top of form
+- Each field shows inline error message
+- Form values retained on error via old() helper
+
+SECURITY:
+=========
+- All routes protected with middleware: auth, role:staff
+- Only staff role users can access these routes
+- Cannot access from admin or user accounts
+- No delete functionality intentionally blocked
+
+FUTURE ENHANCEMENTS:
+====================
+- Staff could manage library stock per book (currently auto-set to 1)
+- Staff could upload book covers
+- Staff could generate reports of added books
+- Permission to delete own created books (future)

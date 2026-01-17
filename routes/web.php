@@ -13,6 +13,8 @@ use App\Http\Controllers\Admin\BookController as AdminBookController;
 
 // staff
 use App\Http\Controllers\Staff\BorrowingController as StaffBorrowingController;
+use App\Http\Controllers\Staff\BookController as StaffBookController;
+use App\Http\Controllers\Staff\LibraryController as StaffLibraryController;
 
 // utils
 use Illuminate\Support\Facades\Route;
@@ -93,9 +95,39 @@ Route::middleware(['auth', 'role:staff'])
         
         Route::patch('/borrowings/{borrowing}/return', [StaffBorrowingController::class, 'markAsReturned'])
             ->name('borrowings.return');
-    });
         // end line borrowings
 
+        // line books
+        Route::get('/books/create', [StaffBookController::class, 'create'])
+            ->name('books.create');
+        
+        Route::post('/books', [StaffBookController::class, 'store'])
+            ->name('books.store');
+        // end line books
+
+        // line libraries
+        Route::get('/libraries', [StaffLibraryController::class, 'index'])
+            ->name('libraries.index');
+        
+        Route::get('/libraries/{library}', [StaffLibraryController::class, 'show'])
+            ->name('libraries.show');
+        
+        Route::get('/libraries/{library}/add-book', [StaffLibraryController::class, 'addBookForm'])
+            ->name('libraries.add-book-form');
+        
+        Route::post('/libraries/{library}/books', [StaffLibraryController::class, 'storeBook'])
+            ->name('libraries.store-book');
+        
+        Route::get('/libraries/{library}/books/{book}/edit-stock', [StaffLibraryController::class, 'editStockForm'])
+            ->name('libraries.edit-stock-form');
+        
+        Route::patch('/libraries/{library}/books/{book}/stock', [StaffLibraryController::class, 'updateStock'])
+            ->name('libraries.update-stock');
+        
+        Route::delete('/libraries/{library}/books/{book}', [StaffLibraryController::class, 'removeBook'])
+            ->name('libraries.remove-book');
+        // end line libraries
+    });
 
 // staff end line
 
