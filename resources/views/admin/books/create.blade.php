@@ -1,91 +1,100 @@
 {{-- resources\views\admin\books\create.blade.php --}}
 
-@extends('admin.layout')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800">
+            Tambah Buku
+        </h2>
+    </x-slot>
 
-@section('title', 'Tambah Buku')
+    <div class="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow">
+        @if ($errors->any())
+            <div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+                <strong>Terjadi Kesalahan:</strong>
+                <ul class="list-disc ml-5 mt-2">
+                    @foreach ($errors->all() as $err)
+                        <li>{{ $err }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
-@section('content')
-    <h2>Tambah Buku</h2>
+        <form method="POST" action="{{ route('admin.books.store') }}" class="space-y-4">
+            @csrf
 
-    @if ($errors->any())
-        <div style="color: #c00; border: 1px solid #c00; padding: 10px; margin-bottom: 10px;">
-            <strong>Terjadi Kesalahan:</strong>
-            <ul>
-                @foreach ($errors->all() as $err)
-                    <li>{{ $err }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Judul</label>
+                <input type="text" name="title" value="{{ old('title') }}" class="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                @error('title')
+                    <span class="text-red-600 text-sm">{{ $message }}</span>
+                @enderror
+            </div>
 
-    <form method="POST" action="{{ route('admin.books.store') }}">
-        @csrf
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Penulis</label>
+                <input type="text" name="author" value="{{ old('author') }}" class="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                @error('author')
+                    <span class="text-red-600 text-sm">{{ $message }}</span>
+                @enderror
+            </div>
 
-        <div>
-            <label>Judul</label><br>
-            <input type="text" name="title" value="{{ old('title') }}" required>
-            @error('title')
-                <span style="color: #c00;">{{ $message }}</span>
-            @enderror
-        </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Penerbit</label>
+                <input type="text" name="publisher" value="{{ old('publisher') }}" class="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                @error('publisher')
+                    <span class="text-red-600 text-sm">{{ $message }}</span>
+                @enderror
+            </div>
 
-        <div>
-            <label>Penulis</label><br>
-            <input type="text" name="author" value="{{ old('author') }}" required>
-            @error('author')
-                <span style="color: #c00;">{{ $message }}</span>
-            @enderror
-        </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Tahun</label>
+                    <input type="number" name="year" value="{{ old('year') }}" class="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required min="1900" max="{{ date('Y') }}">
+                    @error('year')
+                        <span class="text-red-600 text-sm">{{ $message }}</span>
+                    @enderror
+                </div>
 
-        <div>
-            <label>Penerbit</label><br>
-            <input type="text" name="publisher" value="{{ old('publisher') }}" required>
-            @error('publisher')
-                <span style="color: #c00;">{{ $message }}</span>
-            @enderror
-        </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">ISBN (Opsional)</label>
+                    <input type="text" name="isbn" value="{{ old('isbn') }}" class="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    @error('isbn')
+                        <span class="text-red-600 text-sm">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
 
-        <div>
-            <label>Tahun</label><br>
-            <input type="number" name="year" value="{{ old('year') }}" required min="1900" max="{{ date('Y') }}">
-            @error('year')
-                <span style="color: #c00;">{{ $message }}</span>
-            @enderror
-        </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
+                <select name="category_id" class="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <option value="">-- Pilih Kategori --</option>
+                    @foreach($categories as $cat)
+                        <option value="{{ $cat->id }}" {{ old('category_id') == $cat->id ? 'selected' : '' }}>
+                            {{ $cat->name }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('category_id')
+                    <span class="text-red-600 text-sm">{{ $message }}</span>
+                @enderror
+            </div>
 
-        <div>
-            <label>ISBN (Opsional)</label><br>
-            <input type="text" name="isbn" value="{{ old('isbn') }}">
-            @error('isbn')
-                <span style="color: #c00;">{{ $message }}</span>
-            @enderror
-        </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi (Opsional)</label>
+                <textarea name="description" class="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 h-24">{{ old('description') }}</textarea>
+                @error('description')
+                    <span class="text-red-600 text-sm">{{ $message }}</span>
+                @enderror
+            </div>
 
-        <div>
-            <label>Kategori</label><br>
-            <select name="category_id" required>
-                <option value="">-- Pilih Kategori --</option>
-                @foreach($categories as $cat)
-                    <option value="{{ $cat->id }}" {{ old('category_id') == $cat->id ? 'selected' : '' }}>
-                        {{ $cat->name }}
-                    </option>
-                @endforeach
-            </select>
-            @error('category_id')
-                <span style="color: #c00;">{{ $message }}</span>
-            @enderror
-        </div>
-
-        <div>
-            <label>Deskripsi (Opsional)</label><br>
-            <textarea name="description">{{ old('description') }}</textarea>
-            @error('description')
-                <span style="color: #c00;">{{ $message }}</span>
-            @enderror
-        </div>
-
-        <br>
-        <button type="submit">Simpan</button>
-        <a href="{{ route('admin.books.index') }}">Batal</a>
-    </form>
-@endsection
+            <div class="flex gap-3 pt-4">
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition font-medium">
+                    Simpan
+                </button>
+                <a href="{{ route('admin.books.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition font-medium">
+                    Batal
+                </a>
+            </div>
+        </form>
+    </div>
+</x-app-layout>

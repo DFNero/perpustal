@@ -1,61 +1,69 @@
 {{-- resources/views/admin/libraries/create.blade.php --}}
 
-@extends('admin.layout')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800">
+            Tambah Perpustakaan
+        </h2>
+    </x-slot>
 
-@section('title', 'Tambah Perpustakaan')
+    <div class="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow">
+        @if ($errors->any())
+            <div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+                <strong>Terjadi Kesalahan:</strong>
+                <ul class="list-disc ml-5 mt-2">
+                    @foreach ($errors->all() as $err)
+                        <li>{{ $err }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
-@section('content')
-    <h2>Tambah Perpustakaan</h2>
+        <form method="POST" action="{{ route('admin.libraries.store') }}" class="space-y-4">
+            @csrf
 
-    @if ($errors->any())
-        <div style="color: #c00; border: 1px solid #c00; padding: 10px; margin-bottom: 10px;">
-            <strong>Terjadi Kesalahan:</strong>
-            <ul>
-                @foreach ($errors->all() as $err)
-                    <li>{{ $err }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Nama</label>
+                <input type="text" name="name" value="{{ old('name') }}" class="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                @error('name')
+                    <span class="text-red-600 text-sm">{{ $message }}</span>
+                @enderror
+            </div>
 
-    <form method="POST" action="{{ route('admin.libraries.store') }}">
-        @csrf
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Alamat</label>
+                <textarea name="address" class="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 h-20" required>{{ old('address') }}</textarea>
+                @error('address')
+                    <span class="text-red-600 text-sm">{{ $message }}</span>
+                @enderror
+            </div>
 
-        <div>
-            <label>Nama</label><br>
-            <input type="text" name="name" value="{{ old('name') }}" required>
-            @error('name')
-                <span style="color: #c00;">{{ $message }}</span>
-            @enderror
-        </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Latitude</label>
+                    <input type="text" name="latitude" value="{{ old('latitude') }}" class="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    @error('latitude')
+                        <span class="text-red-600 text-sm">{{ $message }}</span>
+                    @enderror
+                </div>
 
-        <div>
-            <label>Alamat</label><br>
-            <textarea name="address" required>{{ old('address') }}</textarea>
-            @error('address')
-                <span style="color: #c00;">{{ $message }}</span>
-            @enderror
-        </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Longitude</label>
+                    <input type="text" name="longitude" value="{{ old('longitude') }}" class="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    @error('longitude')
+                        <span class="text-red-600 text-sm">{{ $message }}</span>
+                    @enderror
+                </div>
+            </div>
 
-        <div>
-            <label>Latitude</label><br>
-            <input type="text" name="latitude" value="{{ old('latitude') }}" required>
-            @error('latitude')
-                <span style="color: #c00;">{{ $message }}</span>
-            @enderror
-        </div>
-
-        <div>
-            <label>Longitude</label><br>
-            <input type="text" name="longitude" value="{{ old('longitude') }}" required>
-            @error('longitude')
-                <span style="color: #c00;">{{ $message }}</span>
-            @enderror
-        </div>
-
-        <br>
-
-        <button type="submit">Simpan</button>
-        <a href="{{ route('admin.libraries.index') }}">Batal</a>
-    </form>
-@endsection
+            <div class="flex gap-3 pt-4">
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition font-medium">
+                    Simpan
+                </button>
+                <a href="{{ route('admin.libraries.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition font-medium">
+                    Batal
+                </a>
+            </div>
+        </form>
+    </div>
+</x-app-layout>

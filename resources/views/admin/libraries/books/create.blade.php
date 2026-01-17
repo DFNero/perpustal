@@ -1,43 +1,52 @@
 {{-- resources\views\admin\libraries\books\create.blade.php --}}
 
-@extends('admin.layout')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800">
+            Tambah Buku ke {{ $library->name }}
+        </h2>
+    </x-slot>
 
-@section('title', 'Tambah Buku - ' . $library->name)
+    <div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow">
+        @if ($errors->any())
+            <div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+                <strong>Terjadi Kesalahan:</strong>
+                <ul class="list-disc ml-5 mt-2">
+                    @foreach ($errors->all() as $err)
+                        <li>{{ $err }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
-@section('content')
-    <h2>Tambah Buku ke {{ $library->name }}</h2>
+        <form method="POST" action="{{ route('admin.libraries.books.store', $library) }}" class="space-y-4">
+            @csrf
 
-    @if ($errors->any())
-        <div style="color: #c00;">
-            <ul>
-                @foreach ($errors->all() as $err)
-                    <li>{{ $err }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Buku</label>
+                <select name="book_id" class="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <option value="">-- Pilih Buku --</option>
+                    @foreach($books as $book)
+                        <option value="{{ $book->id }}" {{ old('book_id') == $book->id ? 'selected' : '' }}>
+                            {{ $book->title }} - {{ $book->author }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
 
-    <form method="POST" action="{{ route('admin.libraries.books.store', $library) }}">
-        @csrf
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Stok</label>
+                <input type="number" name="stock" value="{{ old('stock', 0) }}" class="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required min="0">
+            </div>
 
-        <div>
-            <label>Pilih Buku</label><br>
-            <select name="book_id" required>
-                <option value="">-- Pilih Buku --</option>
-                @foreach($books as $book)
-                    <option value="{{ $book->id }}" {{ old('book_id') == $book->id ? 'selected' : '' }}>
-                        {{ $book->title }} - {{ $book->author }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-        <div>
-            <label>Stok</label><br>
-            <input type="number" name="stock" value="{{ old('stock', 0) }}" required min="0">
-        </div>
-
-        <br>
-        <button type="submit">Tambah Buku</button>
-        <a href="{{ route('admin.libraries.books.index', $library) }}">Batal</a>
-    </form>
-@endsection
+            <div class="flex gap-3 pt-4">
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition font-medium">
+                    Tambah Buku
+                </button>
+                <a href="{{ route('admin.libraries.books.index', $library) }}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition font-medium">
+                    Batal
+                </a>
+            </div>
+        </form>
+    </div>
+</x-app-layout>

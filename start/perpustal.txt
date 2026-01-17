@@ -1,0 +1,456 @@
+📚 PROJECT: WEBSITE PERPUSTAKAAN DIGITAL
+Framework: Laravel
+Konsep: Online Preview – Offline Borrowing + Multi-Perpustakaan (Simulasi Lokasi)
+________________________________________
+1️⃣ JENIS WEBSITE
+🏛️ Perpustakaan Digital Sekolah
+•	Katalog buku tersedia secara online
+•	Preview isi buku terbatas (tanpa full akses)
+•	Peminjaman buku dilakukan secara offline (datang langsung ke perpustakaan)
+•	Sistem mendukung multi-perpustakaan (simulasi)
+•	Website berfungsi sebagai sistem informasi, pencarian, dan manajemen peminjaman
+________________________________________
+2️⃣ ROLE SYSTEM
+🔑 1. Admin
+Super user / pengelola utama sistem
+Hak akses:
+•	Kelola seluruh data sistem
+•	Kelola user & role
+•	Kelola buku & kategori
+•	Kelola data perpustakaan
+•	Approve / reject peminjaman
+•	Melihat laporan & statistik sistem
+________________________________________
+
+🛠️ 2. Staff / Petugas Perpustakaan
+Operator harian perpustakaan
+Hak akses:
+•	Tambah & edit data buku
+•	Upload cover & preview buku
+•	Mengelola stok buku per perpustakaan
+•	Memproses peminjaman & pengembalian buku
+📌 Tidak memiliki akses untuk menghapus user atau mengubah role
+________________________________________
+👤 3. User / Anggota
+Pengunjung & peminjam buku
+Hak akses:
+•	Registrasi & login
+•	Melihat katalog buku
+•	Membaca preview buku
+•	Melihat ketersediaan buku di perpustakaan
+•	Mengajukan peminjaman
+•	Melihat status & riwayat peminjaman
+________________________________________
+
+
+
+
+
+3️⃣ FITUR UTAMA WEBSITE
+🔐 Authentication & Authorization
+•	Login & registrasi
+•	Role-based access (Admin / Staff / User)
+•	Middleware Laravel untuk pembatasan akses
+________________________________________
+📚 Manajemen Buku
+•	Judul buku
+•	Penulis
+•	Penerbit
+•	Tahun terbit
+•	ISBN
+•	Deskripsi buku
+•	Cover buku
+•	Preview isi (teks / file preview)
+•	Kategori buku
+•	Ketersediaan buku per perpustakaan
+________________________________________
+🗂️ Kategori Buku
+•	Tambah, edit, hapus kategori
+•	Filter buku berdasarkan kategori
+________________________________________
+
+
+🔍 Pencarian Buku
+•	Pencarian berdasarkan judul & penulis
+•	Filter kategori
+•	(Opsional) urutkan buku terbaru
+________________________________________
+👁️ Preview Buku (ONLINE)
+•	Sinopsis
+•	Daftar isi
+•	Cuplikan isi buku
+•	Tidak tersedia akses penuh / download
+________________________________________
+🏛️ Data Perpustakaan (Multi-Perpustakaan – Simulasi)
+•	Nama perpustakaan
+•	Alamat perpustakaan
+•	Koordinat lokasi (latitude & longitude)
+•	Stok buku per perpustakaan
+📌 Data bersifat dummy / simulasi, tidak terhubung ke perpustakaan nyata
+________________________________________
+📍 Integrasi Google Maps
+•	Menampilkan lokasi perpustakaan yang memiliki buku
+•	Integrasi Google Maps menggunakan link navigasi
+•	Tombol “Arahkan ke Google Maps” untuk navigasi
+📌 Menggunakan Google Maps Embed / Direction Link (tanpa API key)
+________________________________________
+📥 Peminjaman Buku (OFFLINE)
+•	User mengajukan peminjaman secara online
+•	User memilih perpustakaan tempat pengambilan buku
+•	Sistem menampilkan lokasi perpustakaan di Google Maps
+•	Status peminjaman:
+o	Pending
+o	Disetujui
+o	Ditolak
+o	Dikembalikan
+•	Pengambilan buku dilakukan langsung di perpustakaan
+________________________________________
+📊 Laporan & Riwayat
+•	Riwayat peminjaman user
+•	Laporan peminjaman per perpustakaan
+•	Statistik buku paling sering dipinjam
+________________________________________
+4️⃣ HALAMAN USER (FRONTEND)
+🌐 Public (tanpa login)
+•	Landing page
+•	Katalog buku
+•	Detail buku + preview
+•	Informasi perpustakaan & lokasi
+•	Tentang perpustakaan
+________________________________________
+👤 User (login)
+•	Dashboard user
+•	Katalog buku
+•	Detail buku & preview
+•	Informasi ketersediaan buku per perpustakaan
+•	Ajukan peminjaman + peta lokasi
+•	Status & riwayat peminjaman
+•	Profil user
+________________________________________
+5️⃣ HALAMAN STAFF / ADMIN (BACKEND)
+🛠️ Dashboard
+•	Total buku
+•	Total user
+•	Total perpustakaan
+•	Buku sedang dipinjam
+•	Statistik singkat
+________________________________________
+📚 Kelola Buku
+•	Tambah buku
+•	Edit buku
+•	Hapus buku
+•	Upload cover & preview
+•	Atur ketersediaan buku di tiap perpustakaan
+________________________________________
+🗂️ Kelola Kategori
+•	Tambah kategori
+•	Edit kategori
+•	Hapus kategori
+________________________________________
+🏛️ Kelola Perpustakaan
+•	Tambah data perpustakaan
+•	Edit alamat & koordinat
+•	Hapus perpustakaan (simulasi)
+________________________________________
+👥 Kelola User (Admin Only)
+•	Lihat daftar user
+•	Ubah role user
+•	Nonaktifkan user
+________________________________________
+📥 Kelola Peminjaman
+•	Lihat pengajuan peminjaman
+•	Approve / reject peminjaman
+•	Proses pengembalian buku
+•	Update status peminjaman
+________________________________________
+
+
+
+📈 Laporan
+•	Riwayat peminjaman
+•	Filter berdasarkan tanggal & perpustakaan
+•	Data pendukung laporan sekolah
+________________________________________
+6️⃣ TEKNOLOGI & TOOLS
+•	Laravel 10 / 11
+•	Blade Template
+•	MySQL
+•	Bootstrap / Tailwind
+•	Laravel Breeze (Authentication)
+•	Laravel Storage (cover & preview buku)
+•	Google Maps Embed / Direction Link
+________________________________________
+7️⃣ KELEBIHAN KONSEP INI (UNTUK PENILAIAN)
+✅ Realistis & aplikatif
+✅ Aman dari sisi hak cipta
+✅ Tidak over-complex
+✅ Konsep sistem jelas & logis
+✅ Menunjukkan pemahaman sistem terdistribusi
+✅ Cocok untuk skala sekolah
+________________________________________
+
+
+
+
+8️⃣ STATUS PROYEK (NEXT STEP)
+Tahap selanjutnya:
+•	🔹 Membuat ERD final (dengan perpustakaan & relasi buku)
+•	🔹 Membuat migration Laravel
+•	🔹 Middleware role & akses
+•	🔹 Routing sistem peminjaman
+•	🔹 Desain UI halaman peta
+•	🔹 Template laporan sekolah
+
+ 
+🗄️ A. LIST TABEL DATABASE (FINAL)
+________________________________________
+1️⃣ users
+fungsi: semua akun (admin, staff, user)
+kolom penting:
+•	id (PK)
+•	name
+•	email
+•	password
+•	timestamps
+catatan:
+•	role TIDAK di sini
+•	role ditangani spatie
+________________________________________
+2️⃣ roles
+fungsi: daftar role sistem
+isi:
+•	Admin
+•	Staff
+•	User
+(dari spatie)
+________________________________________
+
+
+3️⃣ permissions
+fungsi: hak akses detail
+(dari spatie)
+________________________________________
+4️⃣ model_has_roles
+fungsi: relasi user ↔ role
+(dari spatie)
+________________________________________
+5️⃣ categories
+fungsi: kategori buku
+kolom:
+•	id (PK)
+•	name
+•	slug
+•	timestamps
+•	deleted_at (soft delete)
+________________________________________
+6️⃣ libraries
+fungsi: data perpustakaan (fiktif)
+kolom:
+•	id (PK)
+•	name
+•	address
+•	latitude
+•	longitude
+•	timestamps
+•	deleted_at (soft delete)
+________________________________________
+7️⃣ books
+fungsi: data utama buku
+kolom:
+•	id (PK)
+•	category_id (FK)
+•	title
+•	author
+•	publisher
+•	year
+•	isbn
+•	description
+•	cover_path
+•	preview_path (file / nullable)
+•	timestamps
+•	deleted_at (soft delete)
+________________________________________
+
+
+
+
+
+8️⃣ book_library (pivot table)
+fungsi: stok buku per perpustakaan
+kolom:
+•	id (PK)
+•	book_id (FK)
+•	library_id (FK)
+•	stock
+•	timestamps
+________________________________________
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+9️⃣ borrowings
+fungsi: transaksi peminjaman
+kolom:
+•	id (PK)
+•	user_id (FK)
+•	book_id (FK)
+•	library_id (FK)
+•	status (ENUM)
+•	borrow_date
+•	return_date
+•	notes (nullable)
+•	timestamps
+status ENUM:
+•	pending
+•	approved
+•	rejected
+•	returned
+
+
+
+
+
+
+
+🔗 B. LIST RELASI ANTAR TABEL
+________________________________________
+👤 User
+•	user HAS MANY borrowings
+•	user HAS ONE role (via spatie)
+________________________________________
+📚 Category
+•	category HAS MANY books
+•	book BELONGS TO category
+________________________________________
+📖 Book
+•	book BELONGS TO category
+•	book BELONGS TO MANY libraries (via book_library)
+•	book HAS MANY borrowings
+________________________________________
+🏛️ Library
+•	library BELONGS TO MANY books (via book_library)
+•	library HAS MANY borrowings
+________________________________________
+📥 Borrowing
+•	borrowing BELONGS TO user
+•	borrowing BELONGS TO book
+•	borrowing BELONGS TO library
+________________________________________
+🔁 book_library (pivot)
+•	book_library BELONGS TO book
+•	book_library BELONGS TO library
+________________________________________
+🧠 C. NORMALISASI (STATUS)
+Aspek	Status
+Duplikasi data	❌ Tidak ada
+Pivot table	✅ Ada
+FK jelas	✅
+Soft delete aman	✅
+3NF	✅
+📌 AMAN DELETE DATA
+•	buku dihapus → borrowing tetap aman
+•	perpustakaan dihapus → histori tetap ada
+________________________________________
+
+
+
+
+
+
+
+
+
+🖥️ D. SYSTEM DESIGN (ARSITEKTUR WEB)
+1️⃣ Tipe Sistem
+•	Monolith Web App
+•	Laravel + Blade
+•	BUKAN SPA
+•	BUKAN API
+________________________________________
+2️⃣ Frontend
+•	Blade Template
+•	Bootstrap / Tailwind
+•	JS MINIMAL
+JS dipakai untuk:
+•	confirm delete
+•	toggle UI kecil
+•	optional preview
+❌ React
+❌ Vue
+❌ Livewire
+❌ Inertia
+
+
+
+
+
+
+________________________________________
+3️⃣ Backend
+•	Laravel MVC
+•	Controller:
+o	BookController
+o	BorrowingController
+o	CategoryController
+o	LibraryController
+•	Model:
+o	Book
+o	Category
+o	Library
+o	Borrowing
+________________________________________
+
+
+
+
+
+
+
+
+
+
+4️⃣ Flow Sistem (SINGKAT)
+User:
+lihat buku
+→ baca preview
+→ pilih perpustakaan
+→ ajukan pinjam
+→ datang ke lokasi (maps)
+Staff:
+kelola buku
+→ update stok
+→ approve pinjaman
+→ proses pengembalian
+Admin:
+semua akses
++ kelola user & role
++ laporan
+________________________________________
+5️⃣ Google Maps Design
+•	TIDAK pakai API
+•	TIDAK embed map
+Link:
+https://www.google.com/maps?q=LAT,LONG
+📌 Ringan
+📌 Gratis
+📌 Aman
+________________________________________
+6️⃣ Data Update
+•	Request–response biasa
+•	Page reload
+•	Pagination
+•	Flash message
+❌ Real-time
+❌ Websocket
+

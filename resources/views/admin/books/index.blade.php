@@ -1,11 +1,13 @@
 {{-- resources\views\admin\books\index.blade.php --}}
 
-@extends('admin.layout')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800">
+            Kelola Buku
+        </h2>
+    </x-slot>
 
-@section('title', 'Kelola Buku')
-
-@section('content')
-    <h2>Kelola Buku</h2>
+    <div class="space-y-4">
 
     <a href="{{ route('admin.books.create') }}">+ Tambah Buku</a>
 
@@ -44,6 +46,9 @@
             </tbody>
         </table>
     @else
-        <p>Belum ada buku.</p>
+        <div class="bg-white p-6 rounded-lg text-gray-500 text-center">
+            <p>Belum ada buku.</p>
+        </div>
     @endif
-@endsection
+    </div>
+</x-app-layout>

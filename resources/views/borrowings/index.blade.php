@@ -2,17 +2,12 @@
 
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl">
-                Riwayat Peminjaman Saya
-            </h2>
-            <a href="{{ route('notifications.index') }}" class="text-blue-600 hover:underline text-sm">
-                📢 Notifikasi
-            </a>
-        </div>
+        <h2 class="font-semibold text-xl text-gray-800">
+            Riwayat Peminjaman Saya
+        </h2>
     </x-slot>
 
-    <div class="p-6 space-y-4">
+    <div class="space-y-4">
         @if (session('success'))
             <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
                 {{ session('success') }}
@@ -26,9 +21,9 @@
         @endif
 
         @forelse ($borrowings as $b)
-            <div class="border p-4 rounded flex justify-between items-center">
+            <div class="border p-4 rounded flex justify-between items-center bg-white shadow-sm hover:shadow-md transition">
                 <div>
-                    <p class="font-bold">{{ $b->book->title }}</p>
+                    <p class="font-bold text-gray-900">{{ $b->book->title }}</p>
                     <p class="text-sm text-gray-600">
                         Penulis: {{ $b->book->author }}
                     </p>
@@ -72,7 +67,7 @@
                 </div>
             </div>
         @empty
-            <div class="text-center py-8 text-gray-500">
+            <div class="text-center py-8 text-gray-500 bg-white rounded-lg">
                 <p>Anda belum memiliki riwayat peminjaman.</p>
                 <a href="{{ route('books.index') }}" class="text-blue-600 hover:underline mt-2 inline-block">
                     Jelajahi Buku →
