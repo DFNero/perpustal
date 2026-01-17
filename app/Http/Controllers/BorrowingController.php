@@ -65,7 +65,7 @@ class BorrowingController extends Controller
         ]);
 
         return redirect()
-            ->route('user.borrowings.index')
+            ->route('borrowings.index')
             ->with('success', 'Pengajuan peminjaman berhasil dikirim.');
     }
 }

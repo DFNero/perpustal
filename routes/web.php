@@ -4,7 +4,6 @@
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BorrowingController;
-use App\Http\Controllers\UserBorrowingController;
 
 // admin
 use App\Http\Controllers\Admin\LibraryController;
@@ -41,10 +40,6 @@ Route::middleware(['auth'])->group(function () {
         ->middleware('role:staff')
         ->name('staff.dashboard');
 
-    // User peminjaman
-    Route::get('/my-borrowings', [UserBorrowingController::class, 'index'])
-        ->name('user.borrowings.index');
-
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -62,6 +57,7 @@ Route::post('/borrow/{book}', [BorrowingController::class, 'store'])
 
 // borrowings line (user)
 Route::middleware('auth')->group(function () {
+    // User borrowings - canonical user page
     Route::get('/borrowings', [BorrowingController::class, 'index'])
         ->name('borrowings.index');
     
