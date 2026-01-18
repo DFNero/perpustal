@@ -21,6 +21,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'ban_until',
+        'banned_reason',
     ];
 
     /**
@@ -43,12 +46,47 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'ban_until' => 'datetime',
         ];
+    }
+
+    public function isBanned(): bool
+    {
+        return $this->ban_until && now()->isBefore($this->ban_until);
+    }
+
+    public function banUser(string $duration, string $reason = null): void
+    {
+        if ($duration === 'permanent') {
+            $this->update([
+                'ban_until' => null,
+                'banned_reason' => $reason ?? 'Banned permanently',
+            ]);
+        } else {
+            $days = (int) $duration;
+            $this->update([
+                'ban_until' => now()->addDays($days),
+                'banned_reason' => $reason,
+            ]);
+        }
+    }
+
+    public function unbanUser(): void
+    {
+        $this->update([
+            'ban_until' => null,
+            'banned_reason' => null,
+        ]);
     }
 
     public function hasRole(string $role): bool
     {
         return $this->role === $role;
+    }
+
+    public function borrowings()
+    {
+        return $this->hasMany(Borrowing::class);
     }
 
 }

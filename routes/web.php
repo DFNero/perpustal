@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\LibraryController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\LibraryBookController;
 use App\Http\Controllers\Admin\BookController as AdminBookController;
+use App\Http\Controllers\Admin\UserController;
 
 // staff
 use App\Http\Controllers\Staff\BorrowingController as StaffBorrowingController;
@@ -231,6 +232,19 @@ Route::middleware(['auth', 'role:admin'])
             ->name('libraries.books.destroy');
 
         // end line book
+
+        // line users
+        Route::get('/users', [UserController::class, 'index'])
+            ->name('users.index');
+        Route::get('/users/create-staff', [UserController::class, 'createStaff'])
+            ->name('users.createStaff');
+        Route::post('/users/staff', [UserController::class, 'storeStaff'])
+            ->name('users.storeStaff');
+        Route::post('/users/{user}/ban', [UserController::class, 'ban'])
+            ->name('users.ban');
+        Route::post('/users/{user}/unban', [UserController::class, 'unban'])
+            ->name('users.unban');
+        // end line users
     });
 
 

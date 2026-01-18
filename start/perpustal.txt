@@ -192,16 +192,7 @@ ________________________________________
 
 
 
-8️⃣ STATUS PROYEK (NEXT STEP)
-Tahap selanjutnya:
-•	🔹 Membuat ERD final (dengan perpustakaan & relasi buku)
-•	🔹 Membuat migration Laravel
-•	🔹 Middleware role & akses
-•	🔹 Routing sistem peminjaman
-•	🔹 Desain UI halaman peta
-•	🔹 Template laporan sekolah
 
- 
 🗄️ A. LIST TABEL DATABASE (FINAL)
 ________________________________________
 1️⃣ users
