@@ -98,11 +98,20 @@ Route::middleware(['auth', 'role:staff'])
         // end line borrowings
 
         // line books
+        Route::get('/books', [StaffBookController::class, 'index'])
+            ->name('books.index');
+        
         Route::get('/books/create', [StaffBookController::class, 'create'])
             ->name('books.create');
         
         Route::post('/books', [StaffBookController::class, 'store'])
             ->name('books.store');
+        
+        Route::get('/books/{book}/edit', [StaffBookController::class, 'edit'])
+            ->name('books.edit');
+        
+        Route::put('/books/{book}', [StaffBookController::class, 'update'])
+            ->name('books.update');
         // end line books
 
         // line libraries

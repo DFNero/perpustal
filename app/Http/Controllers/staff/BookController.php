@@ -51,6 +51,12 @@ class BookController extends Controller
         return null;
     }
 
+    public function index()
+    {
+        $books = Book::with('category')->latest()->get();
+        return view('staff.books.index', compact('books'));
+    }
+
     public function create()
     {
         $categories = Category::orderBy('name')->get();
@@ -79,6 +85,41 @@ class BookController extends Controller
 
         Book::create($data);
 
-        return redirect()->route('staff.libraries.index')->with('success', 'Buku berhasil dibuat.');
+        return redirect()->route('staff.books.index')->with('success', 'Buku berhasil dibuat.');
+    }
+
+    public function edit(Book $book)
+    {
+        $categories = Category::orderBy('name')->get();
+        return view('staff.books.edit', compact('book', 'categories'));
+    }
+
+    public function update(Request $request, Book $book)
+    {
+        $data = $request->validate([
+            'title' => 'required|string|max:255',
+            'author' => 'required|string|max:255',
+            'publisher' => 'required|string|max:255',
+            'year' => 'required|integer|min:1900|max:' . date('Y'),
+            'isbn' => 'nullable|string|max:20',
+            'category_id' => 'required|exists:categories,id',
+            'description' => 'nullable|string',
+            'cover' => 'nullable|image|mimes:jpeg,png,webp|max:2048',
+            'cover_url' => 'nullable|url',
+        ]);
+
+        // Handle cover upload or URL
+        $coverPath = $this->handleCoverUpload($request);
+        if ($coverPath) {
+            // Delete old cover if exists
+            if ($book->cover_path) {
+                Storage::disk('public')->delete($book->cover_path);
+            }
+            $data['cover_path'] = $coverPath;
+        }
+
+        $book->update($data);
+
+        return redirect()->route('staff.books.index')->with('success', 'Buku berhasil diperbarui.');
     }
 }
