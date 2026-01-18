@@ -2,53 +2,60 @@
 
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800">
-            Kelola Buku
-        </h2>
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-gray-800">
+                Kelola Buku
+            </h2>
+            <a href="{{ route('admin.books.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition font-medium">
+                + Tambah Buku
+            </a>
+        </div>
     </x-slot>
 
-    <div class="space-y-4">
-
-    <a href="{{ route('admin.books.create') }}">+ Tambah Buku</a>
-
-    @if($books->count())
-        <table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse; margin-top:8px;">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Judul</th>
-                    <th>Penulis</th>
-                    <th>Penerbit</th>
-                    <th>Tahun</th>
-                    <th>Kategori</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
+    <div class="max-w-7xl mx-auto">
+        @if($books->count())
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 @foreach($books as $book)
-                    <tr>
-                        <td>{{ $loop->iteration }}</td>
-                        <td>{{ $book->title }}</td>
-                        <td>{{ $book->author }}</td>
-                        <td>{{ $book->publisher }}</td>
-                        <td>{{ $book->year }}</td>
-                        <td>{{ $book->category->name ?? '-' }}</td>
-                        <td>
-                            <a href="{{ route('admin.books.edit', $book) }}">Edit</a>
-                            <form action="{{ route('admin.books.destroy', $book) }}" method="POST" style="display:inline" onsubmit="return confirm('Hapus buku ini?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" style="color:#c00; background:none; border:none; padding:0; cursor:pointer;">Hapus</button>
-                            </form>
-                        </td>
-                    </tr>
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+                        <!-- Cover Image -->
+                        <div class="h-64 bg-gray-200 overflow-hidden flex items-center justify-center">
+                            @if($book->cover_path)
+                                <img src="{{ asset('storage/' . $book->cover_path) }}" alt="{{ $book->title }}" class="h-full w-full object-cover">
+                            @else
+                                <div class="text-gray-400 text-center p-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-image mx-auto mb-2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                    <p class="text-sm">Tidak ada cover</p>
+                                </div>
+                            @endif
+                        </div>
+
+                        <!-- Book Info -->
+                        <div class="p-4">
+                            <h3 class="font-semibold text-gray-900 mb-1 line-clamp-2">{{ $book->title }}</h3>
+                            <p class="text-sm text-gray-600 mb-1">{{ $book->author }}</p>
+                            <p class="text-xs text-gray-500 mb-3">{{ $book->category->name ?? 'N/A' }}</p>
+
+                            <!-- Actions -->
+                            <div class="flex gap-2">
+                                <a href="{{ route('admin.books.edit', $book) }}" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-sm transition font-medium text-center">
+                                    Edit
+                                </a>
+                                <form action="{{ route('admin.books.destroy', $book) }}" method="POST" class="flex-1" onsubmit="return confirm('Hapus buku ini?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded text-sm transition font-medium">
+                                        Hapus
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 @endforeach
-            </tbody>
-        </table>
-    @else
-        <div class="bg-white p-6 rounded-lg text-gray-500 text-center">
-            <p>Belum ada buku.</p>
-        </div>
-    @endif
+            </div>
+        @else
+            <div class="bg-white p-12 rounded-lg text-gray-500 text-center">
+                <p>Belum ada buku.</p>
+            </div>
+        @endif
     </div>
 </x-app-layout>

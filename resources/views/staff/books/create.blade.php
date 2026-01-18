@@ -19,8 +19,45 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('staff.books.store') }}" class="space-y-4">
+        <form method="POST" action="{{ route('staff.books.store') }}" class="space-y-4" enctype="multipart/form-data">
             @csrf
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Cover Buku (Opsional)</label>
+                
+                <!-- Upload or URL Toggle -->
+                <div x-data="{ mode: 'upload' }" class="space-y-3">
+                    <div class="flex gap-4 mb-3">
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" name="cover_mode" value="upload" x-model="mode" class="mr-2">
+                            <span class="text-sm text-gray-700">Upload File</span>
+                        </label>
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" name="cover_mode" value="url" x-model="mode" class="mr-2">
+                            <span class="text-sm text-gray-700">Paste URL</span>
+                        </label>
+                    </div>
+
+                    <!-- File Upload -->
+                    <div x-show="mode === 'upload'" class="space-y-2">
+                        <input type="file" name="cover" accept="image/jpeg,image/png,image/webp" class="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <p class="text-xs text-gray-500">JPG, PNG, atau WebP. Maksimal 2MB</p>
+                    </div>
+
+                    <!-- URL Input -->
+                    <div x-show="mode === 'url'" class="space-y-2">
+                        <input type="url" name="cover_url" placeholder="https://example.com/image.jpg" class="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <p class="text-xs text-gray-500">Paste image URL dari internet. Akan didownload otomatis</p>
+                    </div>
+                </div>
+
+                @error('cover')
+                    <span class="text-red-600 text-sm block mt-2">{{ $message }}</span>
+                @enderror
+                @error('cover_url')
+                    <span class="text-red-600 text-sm block mt-2">{{ $message }}</span>
+                @enderror
+            </div>
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Judul</label>
