@@ -2,22 +2,36 @@
 <div x-data="{ sidebarOpen: false }" class="min-h-screen flex flex-col">
     
     <!-- Header -->
-    <header class="bg-white border-b border-gray-200 sticky top-0 z-40">
+    <header class="bg-white border-b border-orange-200 sticky top-0 z-40 shadow-sm">
         <div class="px-6 py-4 flex items-center justify-between">
             <!-- Logo + Sidebar Toggle -->
             <div class="flex items-center gap-4">
-                <button 
+                <button
                     @click="sidebarOpen = !sidebarOpen"
-                    class="p-2 hover:bg-gray-100 rounded-lg transition"
+                    class="p-2 hover:bg-orange-50 rounded-lg transition-colors duration-200"
                     title="Toggle sidebar"
                 >
                     <svg x-show="!sidebarOpen" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3" y1="6" y2="6"/><line x1="3" x2="3" y1="12" y2="12"/><line x1="3" x2="3" y1="18" y2="18"/></svg>
                     <svg x-show="sidebarOpen" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
                 </button>
 
-                <a href="{{ route('dashboard') }}" class="font-bold text-lg text-gray-800">
+                <a href="{{ route('dashboard') }}" class="font-bold text-lg text-orange-600 hover:text-orange-700 transition-colors">
                     📚 Perpustakaan
                 </a>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="flex-1 max-w-md mx-6">
+                <form action="{{ route('books.index') }}" method="GET" class="relative">
+                    <input
+                        type="text"
+                        name="search"
+                        placeholder="Cari buku..."
+                        class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200"
+                        value="{{ request('search') }}"
+                    >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search absolute left-3 top-2.5 text-gray-400"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                </form>
             </div>
 
             <!-- Right: Notifications + Profile -->
@@ -122,17 +136,17 @@
             class="w-64 bg-gray-900 text-gray-100 flex flex-col fixed md:static inset-y-0 left-0 mt-16 md:mt-0 z-30 md:z-0 shadow-lg"
         >
             <nav class="flex-1 px-4 py-6 space-y-2">
-                <a href="{{ route('books.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg {{ request()->routeIs('books.*') ? 'bg-blue-600' : 'hover:bg-gray-800' }} transition">
+                <a href="{{ route('books.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg {{ request()->routeIs('books.*') ? 'bg-orange-600 hover:bg-orange-700' : 'hover:bg-gray-800' }} transition-colors duration-200">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 3H20v13H6.5a2.5 2.5 0 0 0-2.5 2.5v.5"/></svg>
                     <span class="font-medium">Browse Books</span>
                 </a>
 
-                <a href="{{ route('borrowings.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg {{ request()->routeIs('borrowings.*') ? 'bg-blue-600' : 'hover:bg-gray-800' }} transition">
+                <a href="{{ route('borrowings.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg {{ request()->routeIs('borrowings.*') ? 'bg-orange-600 hover:bg-orange-700' : 'hover:bg-gray-800' }} transition-colors duration-200">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-inbox"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
                     <span class="font-medium">My Borrowings</span>
                 </a>
 
-                <a href="{{ route('notifications.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg {{ request()->routeIs('notifications.*') ? 'bg-blue-600' : 'hover:bg-gray-800' }} transition">
+                <a href="{{ route('notifications.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg {{ request()->routeIs('notifications.*') ? 'bg-orange-600 hover:bg-orange-700' : 'hover:bg-gray-800' }} transition-colors duration-200">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21h3.4"/></svg>
                     <span class="font-medium">Notifications</span>
                 </a>

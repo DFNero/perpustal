@@ -2,22 +2,36 @@
 <div x-data="{ sidebarOpen: false }" class="min-h-screen flex flex-col">
     
     <!-- Header -->
-    <header class="bg-white border-b border-gray-200 sticky top-0 z-40">
+    <header class="bg-white border-b border-orange-200 sticky top-0 z-40 shadow-sm">
         <div class="px-6 py-4 flex items-center justify-between">
             <!-- Logo + Sidebar Toggle -->
             <div class="flex items-center gap-4">
-                <button 
+                <button
                     @click="sidebarOpen = !sidebarOpen"
-                    class="p-2 hover:bg-gray-100 rounded-lg transition"
+                    class="p-2 hover:bg-orange-50 rounded-lg transition-colors duration-200"
                     title="Toggle sidebar"
                 >
                     <svg x-show="!sidebarOpen" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3" y1="6" y2="6"/><line x1="3" x2="3" y1="12" y2="12"/><line x1="3" x2="3" y1="18" y2="18"/></svg>
                     <svg x-show="sidebarOpen" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
                 </button>
 
-                <a href="{{ route('admin.dashboard') }}" class="font-bold text-lg text-gray-800">
+                <a href="{{ route('admin.dashboard') }}" class="font-bold text-lg text-orange-600 hover:text-orange-700 transition-colors">
                     ⚙️ Admin Panel
                 </a>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="flex-1 max-w-md mx-6">
+                <form action="{{ route('admin.books.index') }}" method="GET" class="relative">
+                    <input
+                        type="text"
+                        name="search"
+                        placeholder="Cari buku..."
+                        class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200"
+                        value="{{ request('search') }}"
+                    >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search absolute left-3 top-2.5 text-gray-400"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                </form>
             </div>
 
             <!-- Right: Notifications + Profile -->
@@ -122,17 +136,17 @@
             class="w-64 bg-gray-900 text-gray-100 flex flex-col fixed md:static inset-y-0 left-0 mt-16 md:mt-0 z-30 md:z-0 shadow-lg"
         >
             <nav class="flex-1 px-4 py-6 space-y-2">
-                <a href="{{ route('admin.books.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg {{ request()->routeIs('admin.books.*') ? 'bg-red-600' : 'hover:bg-gray-800' }} transition">
+                <a href="{{ route('admin.books.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg {{ request()->routeIs('admin.books.*') ? 'bg-orange-600 hover:bg-orange-700' : 'hover:bg-gray-800' }} transition-colors duration-200">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
                     <span class="font-medium">Books</span>
                 </a>
 
-                <a href="{{ route('admin.categories.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg {{ request()->routeIs('admin.categories.*') ? 'bg-red-600' : 'hover:bg-gray-800' }} transition">
+                <a href="{{ route('admin.categories.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg {{ request()->routeIs('admin.categories.*') ? 'bg-orange-600 hover:bg-orange-700' : 'hover:bg-gray-800' }} transition-colors duration-200">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3" y1="6" y2="6"/><line x1="3" x2="3" y1="12" y2="12"/><line x1="3" x2="3" y1="18" y2="18"/></svg>
                     <span class="font-medium">Categories</span>
                 </a>
 
-                <a href="{{ route('admin.libraries.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg {{ request()->routeIs('admin.libraries.*') ? 'bg-red-600' : 'hover:bg-gray-800' }} transition">
+                <a href="{{ route('admin.libraries.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg {{ request()->routeIs('admin.libraries.*') ? 'bg-orange-600 hover:bg-orange-700' : 'hover:bg-gray-800' }} transition-colors duration-200">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-building-2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                     <span class="font-medium">Libraries</span>
                 </a>
