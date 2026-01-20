@@ -16,6 +16,21 @@
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
+        <!-- Kota/Kabupaten -->
+        <div class="mt-4">
+            <x-input-label for="city" :value="__('Kota/Kabupaten')" />
+            <select id="city" name="city" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required>
+                <option value="">-- Pilih Kota/Kabupaten --</option>
+                @foreach($cities as $code => $name)
+                    <option value="{{ $code }}" {{ old('city') === $code ? 'selected' : '' }}>
+                        {{ $name }}
+                    </option>
+                @endforeach
+            </select>
+            <x-input-error :messages="$errors->get('city')" class="mt-2" />
+            <p class="text-xs text-gray-500 mt-1">Pilih lokasi Anda untuk rekomendasi perpustakaan terdekat</p>
+        </div>
+
         <!-- Password -->
         <div class="mt-4">
             <x-input-label for="password" :value="__('Password')" />

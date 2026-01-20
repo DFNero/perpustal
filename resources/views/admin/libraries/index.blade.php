@@ -8,9 +8,14 @@
     </x-slot>
 
     <div class="space-y-4">
-        <a href="{{ route('admin.libraries.create') }}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
-            + Tambah Perpustakaan
-        </a>
+        <div class="flex gap-2">
+            <a href="{{ route('admin.libraries.create') }}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
+                + Tambah Perpustakaan
+            </a>
+            <a href="{{ route('libraries.map') }}" class="inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition">
+                🗺️ Lihat Peta
+            </a>
+        </div>
 
         @if($libraries->count())
             <div class="bg-white rounded-lg shadow overflow-hidden">

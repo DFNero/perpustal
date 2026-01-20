@@ -4,6 +4,7 @@
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BorrowingController;
+use App\Http\Controllers\LibraryController as PublicLibraryController;
 
 // admin
 use App\Http\Controllers\Admin\LibraryController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\LibraryBookController;
 use App\Http\Controllers\Admin\BookController as AdminBookController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\CityController;
 
 // staff
 use App\Http\Controllers\Staff\BorrowingController as StaffBorrowingController;
@@ -53,6 +55,7 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/books', [BookController::class, 'index'])->name('books.index');
 Route::get('/books/{book}', [BookController::class, 'show'])->name('books.show');
 Route::get('/books/{book}/preview', [BookController::class, 'previewDownload'])->name('books.preview');
+Route::get('/libraries/map', [PublicLibraryController::class, 'map'])->name('libraries.map');
 
 Route::post('/borrow/{book}', [BorrowingController::class, 'store'])
     ->name('borrow.store')
@@ -246,6 +249,21 @@ Route::middleware(['auth', 'role:admin'])
         Route::post('/users/{user}/unban', [UserController::class, 'unban'])
             ->name('users.unban');
         // end line users
+
+        // line cities
+        Route::get('/cities', [CityController::class, 'index'])
+            ->name('cities.index');
+        Route::get('/cities/create', [CityController::class, 'create'])
+            ->name('cities.create');
+        Route::post('/cities', [CityController::class, 'store'])
+            ->name('cities.store');
+        Route::get('/cities/{city}/edit', [CityController::class, 'edit'])
+            ->name('cities.edit');
+        Route::put('/cities/{city}', [CityController::class, 'update'])
+            ->name('cities.update');
+        Route::delete('/cities/{city}', [CityController::class, 'destroy'])
+            ->name('cities.destroy');
+        // end line cities
     });
 
 

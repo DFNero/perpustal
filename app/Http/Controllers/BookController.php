@@ -16,7 +16,27 @@ class BookController extends Controller
     public function show(Book $book)
     {
         $book->load('category', 'libraries');
-        return view('books.show', compact('book'));
+        
+        // Get preview content if it's a text file
+        $previewContent = null;
+        $previewExists = false;
+        
+        if ($book->preview_path && Storage::disk('public')->exists($book->preview_path)) {
+            $previewExists = true;
+            $extension = pathinfo($book->preview_path, PATHINFO_EXTENSION);
+            
+            if ($extension === 'txt') {
+                try {
+                    $previewContent = Storage::disk('public')->get($book->preview_path);
+                    // Limit to first 5000 characters for performance
+                    $previewContent = substr($previewContent, 0, 5000);
+                } catch (\Exception $e) {
+                    $previewContent = null;
+                }
+            }
+        }
+        
+        return view('books.show', compact('book', 'previewContent', 'previewExists'));
     }
 
     public function previewDownload(Book $book)

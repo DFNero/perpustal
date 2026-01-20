@@ -62,7 +62,7 @@
         </div>
 
         <!-- Preview Section -->
-        @if($book->preview_path)
+        @if($book->preview_path && $previewExists)
             <div class="bg-white rounded-lg shadow p-6">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">📄 Preview Buku</h3>
                 
@@ -70,32 +70,31 @@
                     $extension = pathinfo($book->preview_path, PATHINFO_EXTENSION);
                     $isImage = in_array($extension, ['jpg', 'jpeg', 'png', 'gif']);
                     $isPDF = $extension === 'pdf';
+                    $isText = $extension === 'txt';
                 @endphp
 
                 @if($isImage)
                     <!-- Image Preview -->
-                    <div class="flex flex-col items-center space-y-4">
-                        <img src="{{ asset('storage/' . $book->preview_path) }}" alt="Preview" class="max-w-full max-h-96 rounded-lg shadow">
-                        <a href="{{ route('books.preview', $book) }}" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
-                            Lihat Gambar Penuh
-                        </a>
+                    <div class="flex justify-center">
+                        <img src="{{ asset('storage/' . $book->preview_path) }}" 
+                             alt="Preview" 
+                             class="max-w-full max-h-96 rounded-lg shadow">
                     </div>
                 @elseif($isPDF)
                     <!-- PDF Preview (iframe) -->
-                    <div class="flex flex-col space-y-4">
-                        <iframe src="{{ asset('storage/' . $book->preview_path) }}" class="w-full h-96 rounded-lg border border-gray-300"></iframe>
-                        <a href="{{ route('books.preview', $book) }}" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition inline-block w-fit">
-                            Download PDF
-                        </a>
+                    <iframe src="{{ asset('storage/' . $book->preview_path) }}" 
+                            class="w-full h-96 rounded-lg border border-gray-300"></iframe>
+                @elseif($isText && $previewContent)
+                    <!-- Text File Content -->
+                    <div class="bg-gray-50 rounded-lg border border-gray-200 p-4 max-h-96 overflow-y-auto">
+                        <pre class="text-sm text-gray-700 whitespace-pre-wrap break-words font-mono">{{ $previewContent }}</pre>
                     </div>
                 @else
-                    <!-- Text/Other File -->
-                    <div class="flex flex-col items-center space-y-4">
-                        <div class="text-6xl">📄</div>
-                        <p class="text-gray-600">{{ basename($book->preview_path) }}</p>
-                        <a href="{{ route('books.preview', $book) }}" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
-                            Lihat Preview
-                        </a>
+                    <!-- File Tidak Bisa Ditampilkan -->
+                    <div class="text-center text-gray-500 py-12">
+                        <div class="text-5xl mb-2">📄</div>
+                        <p class="text-sm">{{ basename($book->preview_path) }}</p>
+                        <p class="text-xs text-gray-400 mt-2">Format tidak didukung untuk preview</p>
                     </div>
                 @endif
             </div>

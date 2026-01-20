@@ -14,6 +14,12 @@
             </div>
         @endif
 
+        <div class="p-4 border-b flex justify-end">
+            <a href="{{ route('libraries.map') }}" class="inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition">
+                🗺️ Lihat Peta
+            </a>
+        </div>
+
         @if($libraries->isEmpty())
             <div class="p-6 text-center text-gray-500">
                 <p>Tidak ada perpustakaan tersedia.</p>

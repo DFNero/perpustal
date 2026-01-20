@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Helpers\LocationHelper;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,7 +20,8 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        return view('auth.register');
+        $cities = LocationHelper::getCitiesForDropdown();
+        return view('auth.register', compact('cities'));
     }
 
     /**
@@ -33,12 +35,18 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'city' => ['required', 'exists:cities,id'],
         ]);
 
+        // Get coordinates from city
+        $cityData = LocationHelper::getCoordinatesByCity($request->city);
+        
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'latitude' => $cityData['latitude'] ?? null,
+            'longitude' => $cityData['longitude'] ?? null,
         ]);
 
         event(new Registered($user));

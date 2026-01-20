@@ -24,6 +24,8 @@ class User extends Authenticatable
         'role',
         'ban_until',
         'banned_reason',
+        'latitude',
+        'longitude',
     ];
 
     /**
