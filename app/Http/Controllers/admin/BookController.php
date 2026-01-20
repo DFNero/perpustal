@@ -52,6 +52,58 @@ class BookController extends Controller
         return null;
     }
 
+    private function handlePreviewUpload(Request $request): ?string
+    {
+        // If file is uploaded
+        if ($request->hasFile('preview')) {
+            $file = $request->file('preview');
+            $extension = $file->getClientOriginalExtension();
+            $filename = 'previews/' . time() . '_' . uniqid() . '.' . $extension;
+            return $file->storeAs('previews', basename($filename), 'public');
+        }
+
+        // If URL is provided, download and save
+        if ($request->filled('preview_url')) {
+            try {
+                $url = $request->input('preview_url');
+                
+                // Validate URL format
+                if (!filter_var($url, FILTER_VALIDATE_URL)) {
+                    throw new \Exception('Invalid URL format');
+                }
+
+                // Download file
+                $response = Http::timeout(10)->get($url);
+                
+                if ($response->failed()) {
+                    throw new \Exception('Failed to download file');
+                }
+
+                // Determine file extension from URL or content-type
+                $extension = 'pdf'; // default
+                if (preg_match('/\.(\w+)$/', parse_url($url, PHP_URL_PATH), $matches)) {
+                    $ext = strtolower($matches[1]);
+                    if (in_array($ext, ['pdf', 'jpg', 'jpeg', 'png', 'gif', 'txt'])) {
+                        $extension = $ext;
+                    }
+                }
+                
+                // Generate filename
+                $filename = 'previews/' . time() . '_' . uniqid() . '.' . $extension;
+                
+                // Save file
+                Storage::disk('public')->put($filename, $response->body());
+                
+                return $filename;
+            } catch (\Exception $e) {
+                // Silently fail, let validation handle it in form
+                return null;
+            }
+        }
+
+        return null;
+    }
+
     public function index()
     {
         $books = Book::with('category')->latest()->get();
@@ -76,12 +128,20 @@ class BookController extends Controller
             'description' => 'nullable|string',
             'cover' => 'nullable|image|mimes:jpeg,png,webp|max:2048',
             'cover_url' => 'nullable|url',
+            'preview' => 'nullable|file|mimes:pdf,jpeg,jpg,png,gif,txt|max:5120',
+            'preview_url' => 'nullable|url',
         ]);
 
         // Handle cover upload or URL
         $coverPath = $this->handleCoverUpload($request);
         if ($coverPath) {
             $data['cover_path'] = $coverPath;
+        }
+
+        // Handle preview upload or URL
+        $previewPath = $this->handlePreviewUpload($request);
+        if ($previewPath) {
+            $data['preview_path'] = $previewPath;
         }
 
         Book::create($data);
@@ -107,6 +167,8 @@ class BookController extends Controller
             'description' => 'nullable|string',
             'cover' => 'nullable|image|mimes:jpeg,png,webp|max:2048',
             'cover_url' => 'nullable|url',
+            'preview' => 'nullable|file|mimes:pdf,jpeg,jpg,png,gif,txt|max:5120',
+            'preview_url' => 'nullable|url',
         ]);
 
         // Handle cover upload or URL
@@ -119,6 +181,16 @@ class BookController extends Controller
             $data['cover_path'] = $coverPath;
         }
 
+        // Handle preview upload or URL
+        $previewPath = $this->handlePreviewUpload($request);
+        if ($previewPath) {
+            // Delete old preview if exists
+            if ($book->preview_path) {
+                Storage::disk('public')->delete($book->preview_path);
+            }
+            $data['preview_path'] = $previewPath;
+        }
+
         $book->update($data);
 
         return redirect()->route('admin.books.index')->with('success', 'Buku berhasil diperbarui.');
@@ -129,6 +201,10 @@ class BookController extends Controller
         // Delete cover if exists
         if ($book->cover_path) {
             Storage::disk('public')->delete($book->cover_path);
+        }
+        // Delete preview if exists
+        if ($book->preview_path) {
+            Storage::disk('public')->delete($book->preview_path);
         }
         $book->delete();
         return redirect()->route('admin.books.index')->with('success', 'Buku berhasil dihapus.');

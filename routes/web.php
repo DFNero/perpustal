@@ -52,6 +52,7 @@ Route::middleware(['auth'])->group(function () {
 // books line
 Route::get('/books', [BookController::class, 'index'])->name('books.index');
 Route::get('/books/{book}', [BookController::class, 'show'])->name('books.show');
+Route::get('/books/{book}/preview', [BookController::class, 'previewDownload'])->name('books.preview');
 
 Route::post('/borrow/{book}', [BorrowingController::class, 'store'])
     ->name('borrow.store')

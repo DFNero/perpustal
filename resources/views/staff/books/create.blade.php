@@ -60,6 +60,43 @@
             </div>
 
             <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Preview Buku (Opsional)</label>
+                
+                <!-- Upload or URL Toggle -->
+                <div x-data="{ mode: 'upload' }" class="space-y-3">
+                    <div class="flex gap-4 mb-3">
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" name="preview_mode" value="upload" x-model="mode" class="mr-2">
+                            <span class="text-sm text-gray-700">Upload File</span>
+                        </label>
+                        <label class="flex items-center cursor-pointer">
+                            <input type="radio" name="preview_mode" value="url" x-model="mode" class="mr-2">
+                            <span class="text-sm text-gray-700">Paste URL</span>
+                        </label>
+                    </div>
+
+                    <!-- File Upload -->
+                    <div x-show="mode === 'upload'" class="space-y-2">
+                        <input type="file" name="preview" accept=".pdf,image/jpeg,image/png,image/gif,.txt" class="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <p class="text-xs text-gray-500">PDF, JPG, PNG, GIF, atau TXT. Maksimal 5MB</p>
+                    </div>
+
+                    <!-- URL Input -->
+                    <div x-show="mode === 'url'" class="space-y-2">
+                        <input type="url" name="preview_url" placeholder="https://example.com/preview.pdf" class="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <p class="text-xs text-gray-500">Paste file URL dari internet. Akan didownload otomatis</p>
+                    </div>
+                </div>
+
+                @error('preview')
+                    <span class="text-red-600 text-sm block mt-2">{{ $message }}</span>
+                @enderror
+                @error('preview_url')
+                    <span class="text-red-600 text-sm block mt-2">{{ $message }}</span>
+                @enderror
+            </div>
+
+            <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Judul</label>
                 <input type="text" name="title" value="{{ old('title') }}" class="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                 @error('title')
