@@ -56,9 +56,14 @@ class LoginRequest extends FormRequest
             RateLimiter::hit($this->throttleKey());
             
             $message = 'Akun Anda telah diblokir.';
-            if ($user->ban_until) {
+            
+            // Check if permanent ban (ban_until is null but banned_reason exists)
+            if ($user->ban_until === null && $user->banned_reason !== null) {
+                $message .= ' (Permanen)';
+            } elseif ($user->ban_until) {
                 $message .= ' Sampai: ' . $user->ban_until->format('d M Y H:i');
             }
+            
             if ($user->banned_reason) {
                 $message .= ' - Alasan: ' . $user->banned_reason;
             }

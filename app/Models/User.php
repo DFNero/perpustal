@@ -52,12 +52,21 @@ class User extends Authenticatable
 
     public function isBanned(): bool
     {
-        return $this->ban_until && now()->isBefore($this->ban_until);
+        // Permanent ban: ban_until is null but banned_reason exists
+        if ($this->ban_until === null && $this->banned_reason !== null) {
+            return true;
+        }
+        // Temporary ban: ban_until is in the future
+        if ($this->ban_until && now()->isBefore($this->ban_until)) {
+            return true;
+        }
+        return false;
     }
 
     public function banUser(string $duration, string $reason = null): void
     {
         if ($duration === 'permanent') {
+            // Permanent: set ban_until to NULL, but keep banned_reason
             $this->update([
                 'ban_until' => null,
                 'banned_reason' => $reason ?? 'Banned permanently',

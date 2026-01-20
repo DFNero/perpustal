@@ -81,7 +81,7 @@
                     </div>
                 </div>
                 <div class="border-t border-gray-200 mt-8 pt-8 text-center">
-                    <p class="text-gray-600">&copy; 2024 Perpustal. All rights reserved.</p>
+                    <p class="text-gray-600">&copy; 2026 Perpustal. Made by Abbyansyah Atha as a Project.</p>
                 </div>
             </div>
         </footer>

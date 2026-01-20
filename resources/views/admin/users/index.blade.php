@@ -75,7 +75,11 @@
                                     <span class="inline-block bg-red-100 text-red-800 px-3 py-1 rounded text-xs font-semibold">
                                         🔒 Banned
                                     </span>
-                                    @if ($user->ban_until)
+                                    @if ($user->ban_until === null && $user->banned_reason !== null)
+                                        <p class="text-xs text-red-600 mt-1">
+                                            (Permanen)
+                                        </p>
+                                    @elseif ($user->ban_until)
                                         <p class="text-xs text-red-600 mt-1">
                                             Sampai: {{ $user->ban_until->format('d M Y H:i') }}
                                         </p>
