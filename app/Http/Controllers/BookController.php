@@ -10,6 +10,9 @@ class BookController extends Controller
     public function index()
     {
         $search = request('search');
+        $category = request('category');
+        $year = request('year');
+        $publisher = request('publisher');
         
         $query = Book::with('category');
         
@@ -19,13 +22,41 @@ class BookController extends Controller
                 ->orWhere('isbn', 'like', '%' . $search . '%');
         }
         
+        if ($category) {
+            $query->where('category_id', $category);
+        }
+        
+        if ($year) {
+            $query->where('year', $year);
+        }
+        
+        if ($publisher) {
+            $query->where('publisher', 'like', '%' . $publisher . '%');
+        }
+        
         $books = $query->latest()->get();
-        return view('books.index', compact('books', 'search'));
+        
+        // Get filter options
+        $categories = \App\Models\Category::orderBy('name')->get();
+        $years = Book::select('year')->distinct()->whereNotNull('year')->orderBy('year', 'desc')->pluck('year');
+        $publishers = Book::select('publisher')->distinct()->whereNotNull('publisher')->orderBy('publisher')->pluck('publisher');
+        
+        return view('books.index', compact('books', 'search', 'category', 'year', 'publisher', 'categories', 'years', 'publishers'));
     }
 
     public function show(Book $book)
     {
         $book->load('category', 'libraries');
+        
+        // Get nearest libraries if user is logged in and has location
+        $nearestLibraries = [];
+        if (auth()->check() && auth()->user()->latitude && auth()->user()->longitude) {
+            $nearestLibraries = \App\Helpers\DistanceHelper::getNearestLibraries(
+                auth()->user()->latitude,
+                auth()->user()->longitude,
+                5
+            );
+        }
         
         // Get preview content if it's a text file
         $previewContent = null;
@@ -46,7 +77,7 @@ class BookController extends Controller
             }
         }
         
-        return view('books.show', compact('book', 'previewContent', 'previewExists'));
+        return view('books.show', compact('book', 'previewContent', 'previewExists', 'nearestLibraries'));
     }
 
     public function previewDownload(Book $book)

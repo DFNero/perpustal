@@ -4,6 +4,7 @@
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BorrowingController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\LibraryController as PublicLibraryController;
 
 // admin
@@ -13,6 +14,7 @@ use App\Http\Controllers\Admin\LibraryBookController;
 use App\Http\Controllers\Admin\BookController as AdminBookController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\CityController;
+use App\Http\Controllers\Admin\StatisticsController;
 
 // staff
 use App\Http\Controllers\Staff\BorrowingController as StaffBorrowingController;
@@ -59,6 +61,15 @@ Route::get('/libraries/map', [PublicLibraryController::class, 'map'])->name('lib
 
 Route::post('/borrow/{book}', [BorrowingController::class, 'store'])
     ->name('borrow.store')
+    ->middleware('auth');
+
+// Reviews
+Route::post('/books/{book}/reviews', [ReviewController::class, 'store'])
+    ->name('reviews.store')
+    ->middleware('auth');
+
+Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])
+    ->name('reviews.destroy')
     ->middleware('auth');
 // books end line
 
@@ -151,6 +162,11 @@ Route::middleware(['auth', 'role:admin'])
     ->name('admin.')
     ->group(function () {
         
+        // line statistics
+        Route::get('/statistics', [StatisticsController::class, 'index'])
+            ->name('statistics.index');
+        // end line statistics
+
         // line categories
         
         Route::get('/categories', [CategoryController::class, 'index'])

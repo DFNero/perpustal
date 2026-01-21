@@ -37,4 +37,19 @@ class Book extends Model
     {
         return $this->hasMany(Borrowing::class);
     }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function averageRating()
+    {
+        return $this->reviews()->avg('rating') ?? 0;
+    }
+
+    public function ratingCount()
+    {
+        return $this->reviews()->count();
+    }
 }
