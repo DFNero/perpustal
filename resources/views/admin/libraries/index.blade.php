@@ -8,6 +8,25 @@
     </x-slot>
 
     <div class="space-y-4">
+        <!-- Search Box -->
+        <form action="{{ route('admin.libraries.index') }}" method="GET" class="flex gap-2">
+            <div class="flex-1 relative max-w-md">
+                <input
+                    type="text"
+                    name="search"
+                    placeholder="Cari perpustakaan..."
+                    class="w-full px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    value="{{ $search ?? '' }}"
+                >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search absolute left-3 top-2.5 text-gray-400"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            </div>
+            @if($search ?? false)
+                <a href="{{ route('admin.libraries.index') }}" class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-900 rounded-lg transition">
+                    Reset
+                </a>
+            @endif
+        </form>
+
         <div class="flex gap-2">
             <a href="{{ route('admin.libraries.create') }}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
                 + Tambah Perpustakaan

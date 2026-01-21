@@ -10,8 +10,16 @@ class CityController extends Controller
 {
     public function index()
     {
-        $cities = City::withCount('users')->orderBy('name')->get();
-        return view('admin.cities.index', compact('cities'));
+        $search = request('search');
+        
+        $query = City::withUserCount();
+        
+        if ($search) {
+            $query->where('name', 'like', '%' . $search . '%');
+        }
+        
+        $cities = $query->orderBy('name')->get();
+        return view('admin.cities.index', compact('cities', 'search'));
     }
 
     public function create()

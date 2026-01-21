@@ -13,6 +13,27 @@
     </x-slot>
 
     <div class="bg-white shadow-md rounded-lg p-6">
+        <!-- Search Box -->
+        <div class="mb-6">
+            <form action="{{ route('admin.users.index') }}" method="GET" class="flex gap-2">
+                <div class="flex-1 relative max-w-md">
+                    <input
+                        type="text"
+                        name="search"
+                        placeholder="Cari user..."
+                        class="w-full px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        value="{{ $search ?? '' }}"
+                    >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search absolute left-3 top-2.5 text-gray-400"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                </div>
+                @if($search ?? false)
+                    <a href="{{ route('admin.users.index') }}" class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-900 rounded-lg transition">
+                        Reset
+                    </a>
+                @endif
+            </form>
+        </div>
+
         {{-- Flash Messages --}}
         @if (session('success'))
             <div class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">

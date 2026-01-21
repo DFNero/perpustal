@@ -1,16 +1,14 @@
-@extends('layouts.app')
-
-@section('content')
-<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Header -->
-        <div class="mb-8">
-            <a href="{{ route('admin.cities.index') }}" class="text-blue-600 hover:text-blue-800 font-medium mb-4 inline-block">
-                ← Kembali ke Daftar Kota
+<x-app-layout>
+    <x-slot name="header">
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-gray-800">Tambah Kota Baru</h2>
+            <a href="{{ route('admin.cities.index') }}" class="text-blue-600 hover:text-blue-800 font-medium">
+                ← Kembali
             </a>
-            <h1 class="text-3xl font-bold text-gray-900">Tambah Kota Baru</h1>
-            <p class="text-gray-600 mt-2">Tambahkan lokasi baru untuk pengguna memilih</p>
         </div>
+    </x-slot>
+
+    <div class="max-w-2xl mx-auto">
 
         <!-- Form -->
         <div class="bg-white rounded-lg shadow-md p-6">
@@ -98,5 +96,4 @@
             </form>
         </div>
     </div>
-</div>
-@endsection
+</x-app-layout>

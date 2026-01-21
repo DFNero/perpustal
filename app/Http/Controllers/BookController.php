@@ -9,8 +9,18 @@ class BookController extends Controller
 {
     public function index()
     {
-        $books = Book::with('category')->latest()->get();
-        return view('books.index', compact('books'));
+        $search = request('search');
+        
+        $query = Book::with('category');
+        
+        if ($search) {
+            $query->where('title', 'like', '%' . $search . '%')
+                ->orWhere('author', 'like', '%' . $search . '%')
+                ->orWhere('isbn', 'like', '%' . $search . '%');
+        }
+        
+        $books = $query->latest()->get();
+        return view('books.index', compact('books', 'search'));
     }
 
     public function show(Book $book)

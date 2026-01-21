@@ -11,6 +11,27 @@
     </x-slot>
 
     <div class="p-6 max-w-7xl mx-auto">
+        <!-- Search Box -->
+        <div class="mb-8">
+            <form action="{{ route('books.index') }}" method="GET" class="flex gap-2">
+                <div class="flex-1 relative">
+                    <input
+                        type="text"
+                        name="search"
+                        placeholder="Cari buku berdasarkan judul, penulis, atau ISBN..."
+                        class="w-full px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        value="{{ $search ?? '' }}"
+                    >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search absolute left-3 top-2.5 text-gray-400"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                </div>
+                @if($search ?? false)
+                    <a href="{{ route('books.index') }}" class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-900 rounded-lg transition">
+                        Reset
+                    </a>
+                @endif
+            </form>
+        </div>
+
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             @forelse($books as $book)
                 <a href="{{ route('books.show', $book) }}" class="group">

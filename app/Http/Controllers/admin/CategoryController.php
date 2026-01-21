@@ -31,8 +31,17 @@ class CategoryController extends Controller
 
     public function index()
     {
-        $categories = Category::latest()->get();
-        return view('admin.categories.index', compact('categories'));
+        $search = request('search');
+        
+        $query = Category::query();
+        
+        if ($search) {
+            $query->where('name', 'like', '%' . $search . '%')
+                ->orWhere('slug', 'like', '%' . $search . '%');
+        }
+        
+        $categories = $query->latest()->get();
+        return view('admin.categories.index', compact('categories', 'search'));
     }
 
     public function edit(Category $category)

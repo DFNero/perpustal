@@ -22,7 +22,19 @@ class City extends Model
      */
     public function users()
     {
-        return $this->hasMany(User::class, 'latitude', 'latitude')
+        return User::where('latitude', $this->latitude)
             ->where('longitude', $this->longitude);
+    }
+
+    /**
+     * Scope to add user count via subquery
+     */
+    public function scopeWithUserCount($query)
+    {
+        return $query->addSelect([
+            'users_count' => \App\Models\User::selectRaw('count(*)')
+                ->whereColumn('latitude', 'cities.latitude')
+                ->whereColumn('longitude', 'cities.longitude')
+        ]);
     }
 }

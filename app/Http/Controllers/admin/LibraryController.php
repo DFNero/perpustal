@@ -10,8 +10,17 @@ class LibraryController extends Controller
 {
     public function index()
     {
-        $libraries = Library::latest()->get();
-        return view('admin.libraries.index', compact('libraries'));
+        $search = request('search');
+        
+        $query = Library::query();
+        
+        if ($search) {
+            $query->where('name', 'like', '%' . $search . '%')
+                ->orWhere('address', 'like', '%' . $search . '%');
+        }
+        
+        $libraries = $query->latest()->get();
+        return view('admin.libraries.index', compact('libraries', 'search'));
     }
 
     public function create()

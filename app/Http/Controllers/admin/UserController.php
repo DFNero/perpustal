@@ -10,13 +10,23 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::latest()
+        $search = request('search');
+        
+        $query = User::query();
+        
+        if ($search) {
+            $query->where('name', 'like', '%' . $search . '%')
+                ->orWhere('email', 'like', '%' . $search . '%')
+                ->orWhere('role', 'like', '%' . $search . '%');
+        }
+        
+        $users = $query->latest()
             ->with(['borrowings' => function ($query) {
                 $query->whereIn('status', ['pending', 'approved']);
             }])
             ->paginate(50);
         
-        return view('admin.users.index', compact('users'));
+        return view('admin.users.index', compact('users', 'search'));
     }
 
     public function createStaff()
