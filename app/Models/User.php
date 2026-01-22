@@ -26,6 +26,7 @@ class User extends Authenticatable
         'banned_reason',
         'latitude',
         'longitude',
+        'city_id',
     ];
 
     /**
@@ -103,6 +104,11 @@ class User extends Authenticatable
     public function reviews()
     {
         return $this->hasMany(Review::class);
+    }
+
+    public function city()
+    {
+        return $this->belongsTo(City::class);
     }
 
 }

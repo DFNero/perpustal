@@ -1,63 +1,94 @@
 <section>
-    <header>
-        <h2 class="text-lg font-medium text-gray-900">
-            {{ __('Profile Information') }}
-        </h2>
-
-        <p class="mt-1 text-sm text-gray-600">
-            {{ __("Update your account's profile information and email address.") }}
-        </p>
+    <header class="mb-8">
+        <div class="flex items-center gap-3 mb-2">
+            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-xl font-bold">
+                {{ strtoupper(substr($user->name, 0, 1)) }}
+            </div>
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900">Profil Saya</h2>
+                <p class="text-sm text-gray-600 mt-1">Kelola informasi akun Anda</p>
+            </div>
+        </div>
     </header>
 
-    <form id="send-verification" method="post" action="{{ route('verification.send') }}">
-        @csrf
-    </form>
-
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('profile.update') }}" class="space-y-8">
         @csrf
         @method('patch')
 
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
-            <x-input-error class="mt-2" :messages="$errors->get('name')" />
+        <!-- Name Section -->
+        <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 border border-blue-200">
+            <label for="name" class="block text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
+                <span class="text-lg">👤</span> Nama Lengkap
+            </label>
+            <input 
+                id="name" 
+                name="name" 
+                type="text" 
+                class="w-full px-4 py-3 rounded-lg border-2 border-blue-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all text-gray-900 placeholder-gray-400" 
+                value="{{ old('name', $user->name) }}" 
+                required 
+                autofocus 
+                autocomplete="name"
+                placeholder="Masukkan nama lengkap Anda"
+            />
+            @error('name')
+                <p class="mt-2 text-sm text-red-600 font-medium">{{ $message }}</p>
+            @enderror
         </div>
 
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
-            <x-input-error class="mt-2" :messages="$errors->get('email')" />
-
-            @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
-                <div>
-                    <p class="text-sm mt-2 text-gray-800">
-                        {{ __('Your email address is unverified.') }}
-
-                        <button form="send-verification" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                            {{ __('Click here to re-send the verification email.') }}
-                        </button>
-                    </p>
-
-                    @if (session('status') === 'verification-link-sent')
-                        <p class="mt-2 font-medium text-sm text-green-600">
-                            {{ __('A new verification link has been sent to your email address.') }}
-                        </p>
-                    @endif
-                </div>
-            @endif
+        <!-- Location/City Section -->
+        <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-6 border border-orange-200">
+            <label for="city_id" class="block text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
+                <span class="text-lg">📍</span> Kota/Kabupaten
+            </label>
+            <select 
+                id="city_id" 
+                name="city_id" 
+                class="w-full px-4 py-3 rounded-lg border-2 border-orange-300 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all text-gray-900"
+                required
+            >
+                <option value="">-- Pilih Kota/Kabupaten --</option>
+                @foreach ($cities as $city)
+                    <option value="{{ $city->id }}" {{ old('city_id', $user->city_id) == $city->id ? 'selected' : '' }}>
+                        {{ $city->name }}
+                    </option>
+                @endforeach
+            </select>
+            @error('city_id')
+                <p class="mt-2 text-sm text-red-600 font-medium">{{ $message }}</p>
+            @enderror
+            <p class="mt-2 text-xs text-gray-600">Pilih lokasi terdekat dengan tempat tinggal Anda untuk menemukan perpustakaan terdekat</p>
         </div>
 
+        <!-- Current City Info -->
+        @if ($user->city)
+            <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded">
+                <p class="text-sm text-gray-700">
+                    <span class="font-semibold">Lokasi Saat Ini:</span> 
+                    <span class="text-green-700 font-medium">{{ $user->city->name }}</span>
+                </p>
+            </div>
+        @endif
+
+        <!-- Save Button -->
         <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Save') }}</x-primary-button>
+            <button 
+                type="submit"
+                class="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all shadow-md hover:shadow-lg"
+            >
+                💾 Simpan Perubahan
+            </button>
 
             @if (session('status') === 'profile-updated')
                 <p
                     x-data="{ show: true }"
                     x-show="show"
                     x-transition
-                    x-init="setTimeout(() => show = false, 2000)"
-                    class="text-sm text-gray-600"
-                >{{ __('Saved.') }}</p>
+                    x-init="setTimeout(() => show = false, 3000)"
+                    class="text-sm font-medium text-green-600 flex items-center gap-2"
+                >
+                    ✅ Profil berhasil diperbarui
+                </p>
             @endif
         </div>
     </form>
