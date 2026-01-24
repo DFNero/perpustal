@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Staff;
 
 use App\Http\Controllers\Controller;
 use App\Models\Borrowing;
+use App\Models\ActivityLog;
 use App\Notifications\BorrowingStatusNotification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -76,6 +77,16 @@ class BorrowingController extends Controller
                 );
             });
 
+            // Log approval activity
+            ActivityLog::log(
+                Auth::id(),
+                'staff_approve_borrow',
+                'Borrowing',
+                $borrowing->id,
+                'Staff approved borrow request for: ' . $borrowing->book->title . ' (User: ' . $borrowing->user->name . ')',
+                ['book_id' => $borrowing->book_id, 'user_id' => $borrowing->user_id]
+            );
+
             return back()->with('success', 'Peminjaman disetujui dan stok berkurang 1.');
         } catch (\Exception $e) {
             return back()->withErrors([
@@ -106,6 +117,16 @@ class BorrowingController extends Controller
                     new BorrowingStatusNotification('rejected', $borrowing->book->title)
                 );
             });
+
+            // Log rejection activity
+            ActivityLog::log(
+                Auth::id(),
+                'staff_reject_borrow',
+                'Borrowing',
+                $borrowing->id,
+                'Staff rejected borrow request for: ' . $borrowing->book->title . ' (User: ' . $borrowing->user->name . ')',
+                ['book_id' => $borrowing->book_id, 'user_id' => $borrowing->user_id]
+            );
 
             return back()->with('success', 'Peminjaman ditolak.');
         } catch (\Exception $e) {
@@ -153,6 +174,16 @@ class BorrowingController extends Controller
                     new BorrowingStatusNotification('returned', $borrowing->book->title)
                 );
             });
+
+            // Log return activity
+            ActivityLog::log(
+                Auth::id(),
+                'staff_process_return',
+                'Borrowing',
+                $borrowing->id,
+                'Staff processed return for: ' . $borrowing->book->title . ' (User: ' . $borrowing->user->name . ')',
+                ['book_id' => $borrowing->book_id, 'user_id' => $borrowing->user_id]
+            );
 
             return back()->with('success', 'Buku berhasil dikembalikan dan stok bertambah 1.');
         } catch (\Exception $e) {

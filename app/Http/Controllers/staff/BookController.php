@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Staff;
 use App\Http\Controllers\Controller;
 use App\Models\Book;
 use App\Models\Category;
+use App\Models\ActivityLog;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
 
@@ -145,6 +147,16 @@ class BookController extends Controller
 
         Book::create($data);
 
+        // Log book creation
+        ActivityLog::log(
+            Auth::id(),
+            'staff_add_book',
+            'Book',
+            Book::where('title', $data['title'])->latest()->first()->id,
+            'Staff created new book: ' . $data['title'],
+            ['author' => $data['author'], 'category_id' => $data['category_id']]
+        );
+
         return redirect()->route('staff.books.index')->with('success', 'Buku berhasil dibuat.');
     }
 
@@ -191,6 +203,16 @@ class BookController extends Controller
         }
 
         $book->update($data);
+
+        // Log book update
+        ActivityLog::log(
+            Auth::id(),
+            'staff_update_book',
+            'Book',
+            $book->id,
+            'Staff updated book: ' . $book->title,
+            ['author' => $data['author'], 'category_id' => $data['category_id']]
+        );
 
         return redirect()->route('staff.books.index')->with('success', 'Buku berhasil diperbarui.');
     }

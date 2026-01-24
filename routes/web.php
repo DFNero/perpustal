@@ -5,6 +5,7 @@ use App\Http\Controllers\BookController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BorrowingController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\UserActivityController;
 use App\Http\Controllers\LibraryController as PublicLibraryController;
 
 // admin
@@ -15,11 +16,13 @@ use App\Http\Controllers\Admin\BookController as AdminBookController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\StatisticsController;
+use App\Http\Controllers\Admin\ActivityController as AdminActivityController;
 
 // staff
 use App\Http\Controllers\Staff\BorrowingController as StaffBorrowingController;
 use App\Http\Controllers\Staff\BookController as StaffBookController;
 use App\Http\Controllers\Staff\LibraryController as StaffLibraryController;
+use App\Http\Controllers\Staff\ActivityController as StaffActivityController;
 
 // utils
 use Illuminate\Support\Facades\Route;
@@ -87,6 +90,16 @@ Route::middleware('auth')->group(function () {
     
     Route::post('/borrow/{book}', [BorrowingController::class, 'store'])
         ->name('borrow.store');
+
+    // User Activity Log Routes
+    Route::get('/activity-log', [UserActivityController::class, 'activityLog'])
+        ->name('activity-log.index');
+    
+    Route::get('/borrowings-list', [UserActivityController::class, 'borrowingsList'])
+        ->name('borrowings-list.index');
+    
+    Route::post('/borrowings/{borrowing}/cancel', [UserActivityController::class, 'cancelBorrow'])
+        ->name('borrowings.cancel');
 });
 // borrowings end line
 
@@ -152,6 +165,11 @@ Route::middleware(['auth', 'role:staff'])
         Route::delete('/libraries/{library}/books/{book}', [StaffLibraryController::class, 'removeBook'])
             ->name('libraries.remove-book');
         // end line libraries
+
+        // Activity Log
+        Route::get('/activity-log', [StaffActivityController::class, 'index'])
+            ->name('activity-log.index');
+        // end activity log
     });
 
 // staff end line
@@ -280,6 +298,13 @@ Route::middleware(['auth', 'role:admin'])
         Route::delete('/cities/{city}', [CityController::class, 'destroy'])
             ->name('cities.destroy');
         // end line cities
+
+        // Activity Logs
+        Route::get('/activity-logs/worker', [AdminActivityController::class, 'workerLog'])
+            ->name('activity-logs.worker');
+        Route::get('/activity-logs/user', [AdminActivityController::class, 'userLog'])
+            ->name('activity-logs.user');
+        // end activity logs
     });
 
 

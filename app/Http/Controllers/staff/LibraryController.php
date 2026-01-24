@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Staff;
 use App\Http\Controllers\Controller;
 use App\Models\Library;
 use App\Models\Book;
+use App\Models\ActivityLog;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LibraryController extends Controller
 {
@@ -42,6 +44,17 @@ class LibraryController extends Controller
 
         $library->books()->attach($data['book_id'], ['stock' => $data['stock']]);
 
+        // Log book added to library
+        $book = Book::find($data['book_id']);
+        ActivityLog::log(
+            Auth::id(),
+            'staff_add_book_to_library',
+            'Book',
+            $book->id,
+            'Staff added book "' . $book->title . '" to library: ' . $library->name,
+            ['library_id' => $library->id, 'stock' => $data['stock']]
+        );
+
         return redirect()->route('staff.libraries.show', $library)->with('success', 'Buku berhasil ditambahkan ke perpustakaan.');
     }
 
@@ -66,6 +79,16 @@ class LibraryController extends Controller
 
         $library->books()->updateExistingPivot($book->id, ['stock' => $data['stock']]);
 
+        // Log stock update
+        ActivityLog::log(
+            Auth::id(),
+            'staff_update_stock',
+            'Book',
+            $book->id,
+            'Staff updated stock for "' . $book->title . '" in ' . $library->name . ' to: ' . $data['stock'],
+            ['library_id' => $library->id, 'new_stock' => $data['stock']]
+        );
+
         return redirect()->route('staff.libraries.show', $library)->with('success', 'Stok berhasil diperbarui.');
     }
 
@@ -73,6 +96,16 @@ class LibraryController extends Controller
     public function removeBook(Library $library, Book $book)
     {
         $library->books()->detach($book->id);
+
+        // Log book removal from library
+        ActivityLog::log(
+            Auth::id(),
+            'staff_remove_book_from_library',
+            'Book',
+            $book->id,
+            'Staff removed book "' . $book->title . '" from library: ' . $library->name,
+            ['library_id' => $library->id]
+        );
 
         return redirect()->route('staff.libraries.show', $library)->with('success', 'Buku berhasil dihapus dari perpustakaan.');
     }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Borrowing;
 use App\Models\Book;
+use App\Models\ActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -57,12 +58,22 @@ class BorrowingController extends Controller
             ]);
         }
 
-        Borrowing::create([
+        $borrowing = Borrowing::create([
             'user_id'    => Auth::id(),
             'book_id'    => $book->id,
             'library_id' => $data['library_id'],
             'status'     => 'pending',
         ]);
+
+        // Log borrow activity
+        ActivityLog::log(
+            Auth::id(),
+            'user_borrow',
+            'Borrowing',
+            $borrowing->id,
+            'User requested to borrow: ' . $book->title,
+            ['library_id' => $data['library_id']]
+        );
 
         return redirect()
             ->route('borrowings.index')

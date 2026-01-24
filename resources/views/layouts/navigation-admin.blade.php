@@ -72,6 +72,25 @@
                 <span x-show="sidebarOpen" class="font-medium whitespace-nowrap">Statistik</span>
                 <div x-show="!sidebarOpen" x-transition.opacity class="absolute left-full ml-3 z-50 w-max px-2 py-1 bg-gray-900 text-white text-xs rounded-md shadow-lg">Statistik</div>
             </a>
+
+            <!-- Activity Logs Section -->
+            <div x-show="sidebarOpen" class="px-3 py-2 mt-4 mb-2">
+                <p class="text-xs uppercase font-semibold text-gray-500 tracking-widest">Activity Logs</p>
+            </div>
+
+            <!-- Worker Activity Log -->
+            <a href="{{ route('admin.activity-logs.worker') }}" class="relative flex items-center gap-3 px-3 py-3 rounded-lg group transition-all duration-200 {{ request()->routeIs('admin.activity-logs.worker') ? 'bg-orange-600 text-white' : 'hover:bg-gray-800 text-gray-400 hover:text-white' }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0"><path d="M3 8a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><circle cx="9" cy="13" r="1"/><circle cx="15" cy="13" r="1"/></svg>
+                <span x-show="sidebarOpen" class="font-medium whitespace-nowrap">Worker Log</span>
+                <div x-show="!sidebarOpen" x-transition.opacity class="absolute left-full ml-3 z-50 w-max px-2 py-1 bg-gray-900 text-white text-xs rounded-md shadow-lg">Worker Log</div>
+            </a>
+
+            <!-- User Activity Log -->
+            <a href="{{ route('admin.activity-logs.user') }}" class="relative flex items-center gap-3 px-3 py-3 rounded-lg group transition-all duration-200 {{ request()->routeIs('admin.activity-logs.user') ? 'bg-orange-600 text-white' : 'hover:bg-gray-800 text-gray-400 hover:text-white' }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <span x-show="sidebarOpen" class="font-medium whitespace-nowrap">User Log</span>
+                <div x-show="!sidebarOpen" x-transition.opacity class="absolute left-full ml-3 z-50 w-max px-2 py-1 bg-gray-900 text-white text-xs rounded-md shadow-lg">User Log</div>
+            </a>
         </nav>
 
         <!-- Sidebar Footer (User) -->

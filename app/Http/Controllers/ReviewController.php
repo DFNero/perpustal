@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use App\Models\Review;
+use App\Models\ActivityLog;
 use Illuminate\Http\Request;
 
 class ReviewController extends Controller
@@ -25,9 +26,31 @@ class ReviewController extends Controller
 
         if ($existingReview) {
             $existingReview->update($validated);
+            
+            // Log update activity
+            ActivityLog::log(
+                auth()->id(),
+                'user_review',
+                'Review',
+                $existingReview->id,
+                'User updated review for book: ' . $book->title,
+                ['rating' => $validated['rating']]
+            );
+            
             return back()->with('success', 'Rating dan review diperbarui.');
         } else {
-            Review::create($validated);
+            $newReview = Review::create($validated);
+            
+            // Log creation activity
+            ActivityLog::log(
+                auth()->id(),
+                'user_review',
+                'Review',
+                $newReview->id,
+                'User created review for book: ' . $book->title,
+                ['rating' => $validated['rating']]
+            );
+            
             return back()->with('success', 'Rating dan review berhasil ditambahkan.');
         }
     }
@@ -38,6 +61,15 @@ class ReviewController extends Controller
         if ($review->user_id !== auth()->id() && auth()->user()->role !== 'admin') {
             return back()->with('error', 'Anda tidak dapat menghapus review ini.');
         }
+
+        // Log deletion activity
+        ActivityLog::log(
+            auth()->id(),
+            'user_delete_review',
+            'Review',
+            $review->id,
+            'User deleted review for book: ' . $review->book->title
+        );
 
         $review->delete();
         return back()->with('success', 'Review berhasil dihapus.');

@@ -58,6 +58,13 @@
                 <span x-show="sidebarOpen" class="font-medium whitespace-nowrap">Approved</span>
                 <div x-show="!sidebarOpen" x-transition.opacity class="absolute left-full ml-3 z-50 w-max px-2 py-1 bg-gray-900 text-white text-xs rounded-md shadow-lg">Approved</div>
             </a>
+
+            <!-- Activity Log -->
+            <a href="{{ route('staff.activity-log.index') }}" class="relative flex items-center gap-3 px-3 py-3 rounded-lg group transition-all duration-200 {{ request()->routeIs('staff.activity-log.*') ? 'bg-orange-600 text-white' : 'hover:bg-gray-800 text-gray-400 hover:text-white' }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+                <span x-show="sidebarOpen" class="font-medium whitespace-nowrap">Riwayat Aktivitas</span>
+                <div x-show="!sidebarOpen" x-transition.opacity class="absolute left-full ml-3 z-50 w-max px-2 py-1 bg-gray-900 text-white text-xs rounded-md shadow-lg">Aktivitas</div>
+            </a>
         </nav>
 
         <!-- Sidebar Footer (User) -->
