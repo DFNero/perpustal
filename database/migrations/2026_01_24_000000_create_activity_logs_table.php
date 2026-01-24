@@ -32,6 +32,10 @@ return new class extends Migration
                 'staff_reject_borrow',
                 'staff_process_return',
                 'staff_add_book',
+                'staff_update_book',
+                'staff_add_book_to_library',
+                'staff_update_stock',
+                'staff_remove_book_from_library',
                 // Admin activities
                 'admin_ban_user',
                 'admin_unban_user',

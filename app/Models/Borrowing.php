@@ -19,7 +19,6 @@ class Borrowing extends Model
         'return_date',
         'notes',
         'canceled_at',
-        'cancel_reason',
     ];
 
     protected $casts = [

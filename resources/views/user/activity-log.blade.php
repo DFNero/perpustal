@@ -33,6 +33,8 @@
                             <option value="user_borrow" {{ request('activity_type') === 'user_borrow' ? 'selected' : '' }}>Peminjaman</option>
                             <option value="user_cancel_borrow" {{ request('activity_type') === 'user_cancel_borrow' ? 'selected' : '' }}>Pembatalan Peminjaman</option>
                             <option value="user_return_request" {{ request('activity_type') === 'user_return_request' ? 'selected' : '' }}>Pengembalian</option>
+                            <option value="user_review" {{ request('activity_type') === 'user_review' ? 'selected' : '' }}>Review</option>
+                            <option value="user_delete_review" {{ request('activity_type') === 'user_delete_review' ? 'selected' : '' }}>Hapus Review</option>
                         </select>
                     </div>
 
@@ -80,6 +82,14 @@
                             @elseif ($activity->activity_type === 'user_return_request')
                                 <span class="inline-block bg-green-100 text-green-800 px-3 py-1 rounded text-sm font-medium">
                                     📤 Pengembalian
+                                </span>
+                            @elseif ($activity->activity_type === 'user_review')
+                                <span class="inline-block bg-purple-100 text-purple-800 px-3 py-1 rounded text-sm font-medium">
+                                    ⭐ Review
+                                </span>
+                            @elseif ($activity->activity_type === 'user_delete_review')
+                                <span class="inline-block bg-orange-100 text-orange-800 px-3 py-1 rounded text-sm font-medium">
+                                    🗑️ Hapus Review
                                 </span>
                             @endif
 

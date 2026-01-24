@@ -95,10 +95,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/activity-log', [UserActivityController::class, 'activityLog'])
         ->name('activity-log.index');
     
-    Route::get('/borrowings-list', [UserActivityController::class, 'borrowingsList'])
-        ->name('borrowings-list.index');
-    
-    Route::post('/borrowings/{borrowing}/cancel', [UserActivityController::class, 'cancelBorrow'])
+    Route::post('/borrowings/{borrowing}/cancel', [BorrowingController::class, 'cancelBorrow'])
         ->name('borrowings.cancel');
 });
 // borrowings end line

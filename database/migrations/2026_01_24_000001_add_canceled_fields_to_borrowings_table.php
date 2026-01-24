@@ -16,10 +16,6 @@ return new class extends Migration
                 ->nullable()
                 ->after('return_date')
                 ->comment('When borrow was canceled by user');
-            $table->text('cancel_reason')
-                ->nullable()
-                ->after('canceled_at')
-                ->comment('Reason for cancellation');
         });
     }
 
@@ -29,7 +25,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('borrowings', function (Blueprint $table) {
-            $table->dropColumn(['canceled_at', 'cancel_reason']);
+            $table->dropColumn('canceled_at');
         });
     }
 };

@@ -20,8 +20,35 @@
             </div>
         @endif
 
+        {{-- Status Filter --}}
+        <div class="bg-white p-4 rounded-lg shadow-sm">
+            <form method="GET" action="{{ route('borrowings.index') }}" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Status Peminjaman</label>
+                        <select name="status" class="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            <option value="">-- Semua Status --</option>
+                            <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Menunggu Persetujuan</option>
+                            <option value="approved" {{ request('status') === 'approved' ? 'selected' : '' }}>Disetujui</option>
+                            <option value="rejected" {{ request('status') === 'rejected' ? 'selected' : '' }}>Ditolak</option>
+                            <option value="returned" {{ request('status') === 'returned' ? 'selected' : '' }}>Dikembalikan</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex gap-2">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md">
+                        Terapkan Filter
+                    </button>
+                    <a href="{{ route('borrowings.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md">
+                        Reset
+                    </a>
+                </div>
+            </form>
+        </div>
+
         @forelse ($borrowings as $b)
-            <div class="border p-4 rounded flex justify-between items-center bg-white shadow-sm hover:shadow-md transition">
+            <div class="border p-4 rounded flex justify-between items-start bg-white shadow-sm hover:shadow-md transition">
                 <div>
                     <p class="font-bold text-gray-900">{{ $b->book->title }}</p>
                     <p class="text-sm text-gray-600">
@@ -35,21 +62,39 @@
                     </p>
                 </div>
 
-                {{-- STATUS --}}
-                <div class="text-right">
+                {{-- STATUS & ACTIONS --}}
+                <div class="text-right space-y-2">
                     @if ($b->status === 'pending')
                         <span class="inline-block bg-yellow-100 text-yellow-800 px-3 py-1 rounded text-sm">
                             Menunggu Persetujuan
                         </span>
+                        {{-- Cancel Button for Pending --}}
+                        <form method="POST" action="{{ route('borrowings.cancel', $b) }}" 
+                              onsubmit="return confirm('Apakah Anda yakin ingin membatalkan peminjaman ini?');" 
+                              class="inline-block">
+                            @csrf
+                            <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm font-medium transition">
+                                Batalkan
+                            </button>
+                        </form>
                     @elseif ($b->status === 'approved')
                         <span class="inline-block bg-green-100 text-green-800 px-3 py-1 rounded text-sm">
                             Disetujui
                         </span>
                         @if ($b->borrow_date)
-                            <p class="text-xs text-gray-500 mt-2">
+                            <p class="text-xs text-gray-500">
                                 Dipinjam: {{ \Carbon\Carbon::parse($b->borrow_date)->format('d M Y') }}
                             </p>
                         @endif
+                        {{-- Cancel Button for Approved --}}
+                        <form method="POST" action="{{ route('borrowings.cancel', $b) }}" 
+                              onsubmit="return confirm('Apakah Anda yakin ingin membatalkan peminjaman ini?');" 
+                              class="inline-block">
+                            @csrf
+                            <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm font-medium transition">
+                                Batalkan
+                            </button>
+                        </form>
                     @elseif ($b->status === 'rejected')
                         <span class="inline-block bg-red-100 text-red-800 px-3 py-1 rounded text-sm">
                             Ditolak
@@ -59,7 +104,7 @@
                             Dikembalikan
                         </span>
                         @if ($b->return_date)
-                            <p class="text-xs text-gray-500 mt-2">
+                            <p class="text-xs text-gray-500">
                                 Dikembalikan: {{ \Carbon\Carbon::parse($b->return_date)->format('d M Y') }}
                             </p>
                         @endif

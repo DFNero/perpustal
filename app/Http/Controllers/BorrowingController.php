@@ -79,4 +79,37 @@ class BorrowingController extends Controller
             ->route('borrowings.index')
             ->with('success', 'Pengajuan peminjaman berhasil dikirim.');
     }
+
+    /**
+     * Cancel a pending borrow request
+     */
+    public function cancelBorrow(Request $request, Borrowing $borrowing)
+    {
+        // Authorization check
+        if ($borrowing->user_id !== Auth::id()) {
+            return back()->with('error', 'Anda tidak dapat membatalkan peminjaman ini.');
+        }
+
+        // Can only cancel if status is 'pending' or 'approved'
+        if (!in_array($borrowing->status, ['pending', 'approved'])) {
+            return back()->with('error', 'Hanya peminjaman dengan status pending atau approved yang dapat dibatalkan.');
+        }
+
+        // Soft delete: add canceled_at
+        $borrowing->update([
+            'canceled_at' => now(),
+        ]);
+
+        // Log cancellation activity
+        ActivityLog::log(
+            Auth::id(),
+            'user_cancel_borrow',
+            'Borrowing',
+            $borrowing->id,
+            'User canceled borrow request for: ' . $borrowing->book->title,
+            ['original_status' => $borrowing->status]
+        );
+
+        return back()->with('success', 'Pengajuan peminjaman berhasil dibatalkan.');
+    }
 }

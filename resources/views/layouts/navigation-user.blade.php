@@ -62,13 +62,6 @@
                 <span x-show="sidebarOpen" class="font-medium whitespace-nowrap">Riwayat Aktivitas</span>
                 <div x-show="!sidebarOpen" x-transition.opacity class="absolute left-full ml-3 z-50 w-max px-2 py-1 bg-gray-900 text-white text-xs rounded-md shadow-lg">Aktivitas</div>
             </a>
-
-            <!-- Borrowings List -->
-            <a href="{{ route('borrowings-list.index') }}" class="relative flex items-center gap-3 px-3 py-3 rounded-lg group transition-all duration-200 {{ request()->routeIs('borrowings-list.*') ? 'bg-orange-600 text-white' : 'hover:bg-gray-800 text-gray-400 hover:text-white' }}">
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0"><path d="M9 11H3v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-10h-6m0 0V5a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v6m9 6H4"/></svg>
-                <span x-show="sidebarOpen" class="font-medium whitespace-nowrap">Daftar Aktif</span>
-                <div x-show="!sidebarOpen" x-transition.opacity class="absolute left-full ml-3 z-50 w-max px-2 py-1 bg-gray-900 text-white text-xs rounded-md shadow-lg">Daftar Aktif</div>
-            </a>
         </nav>
 
         <!-- Sidebar Footer (User) -->
