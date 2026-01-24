@@ -22,8 +22,7 @@ class City extends Model
      */
     public function users()
     {
-        return User::where('latitude', $this->latitude)
-            ->where('longitude', $this->longitude);
+        return $this->hasMany(User::class);
     }
 
     /**
