@@ -75,18 +75,20 @@ class LibraryController extends Controller
     {
         $data = $request->validate([
             'stock' => 'required|integer|min:0',
+            'reason' => 'nullable|string|max:500',
         ]);
 
+        $oldStock = $library->books()->where('book_id', $book->id)->first()->pivot->stock;
         $library->books()->updateExistingPivot($book->id, ['stock' => $data['stock']]);
 
-        // Log stock update
+        // Log stock update with reason
         ActivityLog::log(
             Auth::id(),
             'staff_update_stock',
             'Book',
             $book->id,
-            'Staff updated stock for "' . $book->title . '" in ' . $library->name . ' to: ' . $data['stock'],
-            ['library_id' => $library->id, 'new_stock' => $data['stock']]
+            'Staff updated stock for "' . $book->title . '" in ' . $library->name . ' from ' . $oldStock . ' to ' . $data['stock'],
+            ['library_id' => $library->id, 'old_stock' => $oldStock, 'new_stock' => $data['stock'], 'reason' => $data['reason']]
         );
 
         return redirect()->route('staff.libraries.show', $library)->with('success', 'Stok berhasil diperbarui.');

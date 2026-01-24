@@ -119,10 +119,18 @@
 
                         <p class="text-gray-900 font-medium">{{ $activity->description }}</p>
                         
+                        @if ($activity->activity_type === 'staff_update_stock' && $activity->metadata && $activity->metadata['reason'])
+                            <div class="mt-2 text-sm text-gray-700 bg-blue-50 p-3 rounded border-l-4 border-blue-500">
+                                <p><strong>💬 Alasan:</strong> {{ $activity->metadata['reason'] }}</p>
+                            </div>
+                        @endif
+                        
                         @if ($activity->metadata)
                             <div class="mt-2 text-sm text-gray-600 bg-gray-50 p-2 rounded">
                                 @foreach ($activity->metadata as $key => $value)
-                                    <p><strong>{{ ucfirst(str_replace('_', ' ', $key)) }}:</strong> {{ is_array($value) ? json_encode($value) : $value }}</p>
+                                    @if ($key !== 'reason')
+                                        <p><strong>{{ ucfirst(str_replace('_', ' ', $key)) }}:</strong> {{ is_array($value) ? json_encode($value) : $value }}</p>
+                                    @endif
                                 @endforeach
                             </div>
                         @endif
