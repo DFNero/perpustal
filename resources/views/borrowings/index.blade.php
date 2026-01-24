@@ -64,7 +64,15 @@
 
                 {{-- STATUS & ACTIONS --}}
                 <div class="text-right space-y-2">
-                    @if ($b->status === 'pending')
+                    @if ($b->canceled_at)
+                        {{-- Show canceled status --}}
+                        <span class="inline-block bg-gray-100 text-gray-800 px-3 py-1 rounded text-sm">
+                            ❌ Dibatalkan
+                        </span>
+                        <p class="text-xs text-gray-500">
+                            Dibatalkan: {{ $b->canceled_at->format('d M Y H:i') }}
+                        </p>
+                    @elseif ($b->status === 'pending')
                         <span class="inline-block bg-yellow-100 text-yellow-800 px-3 py-1 rounded text-sm">
                             Menunggu Persetujuan
                         </span>

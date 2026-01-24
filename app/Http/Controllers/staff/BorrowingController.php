@@ -15,6 +15,7 @@ class BorrowingController extends Controller
     {
         $borrowings = Borrowing::with(['user', 'book', 'library'])
             ->where('status', 'pending')
+            ->whereNull('canceled_at')  // Exclude canceled borrowings
             ->latest()
             ->get();
 
