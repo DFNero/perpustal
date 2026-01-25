@@ -32,6 +32,13 @@
         <!-- Scrollable Navigation Area -->
         <nav class="flex-1 overflow-y-auto px-3 py-6 space-y-1">
             
+            <!-- Dashboard (First Item) -->
+            <a href="{{ route('admin.dashboard') }}" class="relative flex items-center gap-3 px-3 py-3 rounded-lg group transition-all duration-200 {{ request()->routeIs('admin.dashboard') ? 'bg-orange-600 text-white shadow-lg shadow-orange-900/50' : 'hover:bg-gray-800 text-gray-400 hover:text-white' }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                <span x-show="sidebarOpen" class="font-medium whitespace-nowrap">Dashboard</span>
+                <div x-show="!sidebarOpen" x-transition.opacity class="absolute left-full ml-3 z-50 w-max px-2 py-1 bg-gray-900 text-white text-xs rounded-md shadow-lg">Dashboard</div>
+            </a>
+
             <!-- Books -->
             <a href="{{ route('admin.books.index') }}" class="relative flex items-center gap-3 px-3 py-3 rounded-lg group transition-all duration-200 {{ request()->routeIs('admin.books.*') ? 'bg-orange-600 text-white shadow-lg shadow-orange-900/50' : 'hover:bg-gray-800 text-gray-400 hover:text-white' }}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
@@ -64,13 +71,6 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                 <span x-show="sidebarOpen" class="font-medium whitespace-nowrap">Kota/Kabupaten</span>
                 <div x-show="!sidebarOpen" x-transition.opacity class="absolute left-full ml-3 z-50 w-max px-2 py-1 bg-gray-900 text-white text-xs rounded-md shadow-lg">Kota</div>
-            </a>
-
-            <!-- Statistics -->
-            <a href="{{ route('admin.statistics.index') }}" class="relative flex items-center gap-3 px-3 py-3 rounded-lg group transition-all duration-200 {{ request()->routeIs('admin.statistics.*') ? 'bg-orange-600 text-white' : 'hover:bg-gray-800 text-gray-400 hover:text-white' }}">
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17v-4"/><path d="M8 17v-7"/></svg>
-                <span x-show="sidebarOpen" class="font-medium whitespace-nowrap">Statistik</span>
-                <div x-show="!sidebarOpen" x-transition.opacity class="absolute left-full ml-3 z-50 w-max px-2 py-1 bg-gray-900 text-white text-xs rounded-md shadow-lg">Statistik</div>
             </a>
 
             <!-- Activity Logs Section -->

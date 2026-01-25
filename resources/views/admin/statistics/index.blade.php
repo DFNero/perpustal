@@ -165,9 +165,9 @@
                     <tbody class="divide-y">
                         @forelse($recentBorrowings as $borrowing)
                             <tr class="hover:bg-gray-50">
-                                <td class="px-4 py-2 text-gray-900">{{ $borrowing->user->name }}</td>
-                                <td class="px-4 py-2 text-gray-900">{{ $borrowing->book->title }}</td>
-                                <td class="px-4 py-2 text-gray-900">{{ $borrowing->library->name }}</td>
+                                <td class="px-4 py-2 text-gray-900">{{ $borrowing->user?->name ?? 'User Deleted' }}</td>
+                                <td class="px-4 py-2 text-gray-900">{{ $borrowing->book?->title ?? 'Book Deleted' }}</td>
+                                <td class="px-4 py-2 text-gray-900">{{ $borrowing->library?->name ?? 'Library Deleted' }}</td>
                                 <td class="px-4 py-2">
                                     @if($borrowing->status === 'pending')
                                         <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs">Pending</span>

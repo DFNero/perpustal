@@ -17,10 +17,10 @@
     >
         <!-- Brand -->
         <div class="flex items-center h-16 border-b border-gray-700 shrink-0" :class="sidebarOpen ? 'justify-between px-6' : 'justify-center'">
-            <a x-show="sidebarOpen" href="{{ route('dashboard') }}" class="font-bold text-xl text-white tracking-wide flex items-center gap-2">
+            <a x-show="sidebarOpen" href="{{ route('books.index') }}" class="font-bold text-xl text-white tracking-wide flex items-center gap-2">
                 <span class="text-orange-500">📚</span> Perpustakaan
             </a>
-            <a x-show="!sidebarOpen" href="{{ route('dashboard') }}" class="text-orange-500 text-2xl">📚</a>
+            <a x-show="!sidebarOpen" href="{{ route('books.index') }}" class="text-orange-500 text-2xl">📚</a>
 
             <!-- Toggle Button -->
             <button @click="sidebarOpen = !sidebarOpen" class="p-2 rounded-lg hover:bg-gray-700 text-gray-400 hover:text-white transition-colors">

@@ -29,26 +29,15 @@ use Illuminate\Support\Facades\Route;
 
 // public route guests
 Route::get('/', fn () => view('welcome'));
-Route::get('/about', fn () => view('about'));
 
 
 // auth line
 Route::middleware(['auth'])->group(function () {
 
-    // default roles user ke dashboard
-    Route::view('/dashboard', 'dashboard')
-        ->middleware('role:user')
-        ->name('dashboard');
-
-    // admin roles ke dashboard
-    Route::view('/admin/dashboard', 'admin.dashboard')
+    // admin dashboard -> statistics
+    Route::get('/admin/dashboard', [StatisticsController::class, 'index'])
         ->middleware('role:admin')
         ->name('admin.dashboard');
-
-    // staff roles ke dashboard
-    Route::view('/staff/dashboard', 'staff.dashboard')
-        ->middleware('role:staff')
-        ->name('staff.dashboard');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -178,11 +167,9 @@ Route::middleware(['auth', 'role:admin'])
     ->group(function () {
         
         // line statistics
-        Route::get('/statistics', [StatisticsController::class, 'index'])
-            ->name('statistics.index');
-        // end line statistics
+        // end line activity logs
 
-        // line categories
+// admin end line
         
         Route::get('/categories', [CategoryController::class, 'index'])
             ->name('categories.index');

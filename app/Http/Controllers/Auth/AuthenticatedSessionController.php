@@ -34,10 +34,11 @@ class AuthenticatedSessionController extends Controller
         }
 
         if ($user->role === 'staff') {
-            return redirect()->route('staff.dashboard');
+            return redirect()->route('staff.books.index');
         }
 
-        return redirect()->route('dashboard'); // user biasa
+        // User goes to books page
+        return redirect()->route('books.index');
     }
 
 

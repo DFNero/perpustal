@@ -19,7 +19,7 @@ class LibraryController extends Controller
                 ->orWhere('address', 'like', '%' . $search . '%');
         }
         
-        $libraries = $query->latest()->get();
+        $libraries = $query->latest()->paginate(10);
         return view('admin.libraries.index', compact('libraries', 'search'));
     }
 
