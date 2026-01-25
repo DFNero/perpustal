@@ -28,10 +28,18 @@ class LibraryController extends Controller
     // Add book to library form
     public function addBookForm(Library $library)
     {
-        $availableBooks = Book::whereNotIn('id', $library->books->pluck('id'))
+        // Get books that are NOT in this library
+        $addedBookIds = $library->books()->pluck('book_id')->toArray();
+        $availableBooks = Book::whereNotIn('id', $addedBookIds)
             ->orderBy('title')
             ->get();
-        return view('staff.libraries.add-book', compact('library', 'availableBooks'));
+        
+        // Calculate stats
+        $totalBooks = Book::count();
+        $addedCount = count($addedBookIds);
+        $remainingCount = $totalBooks - $addedCount;
+        
+        return view('staff.libraries.add-book', compact('library', 'availableBooks', 'addedCount', 'remainingCount', 'totalBooks'));
     }
 
     // Store book in library

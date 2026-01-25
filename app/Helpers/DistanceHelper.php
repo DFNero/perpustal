@@ -33,8 +33,36 @@ class DistanceHelper
     }
 
     /**
+     * Get all libraries with distance, sorted by proximity
+     * Returns array of libraries with distance, sorted closest first
+     */
+    public static function getAllLibrariesWithDistance($latitude, $longitude)
+    {
+        $libraries = Library::all();
+        
+        $librariesWithDistance = $libraries->map(function ($library) use ($latitude, $longitude) {
+            return [
+                'id' => $library->id,
+                'name' => $library->name,
+                'address' => $library->address,
+                'latitude' => $library->latitude,
+                'longitude' => $library->longitude,
+                'distance' => self::haversineDistance(
+                    (float) $latitude,
+                    (float) $longitude,
+                    (float) $library->latitude,
+                    (float) $library->longitude
+                ),
+                'library' => $library,
+            ];
+        })->sortBy('distance');
+
+        return $librariesWithDistance->values()->all();
+    }
+
+    /**
      * Get nearest libraries for a user based on their coordinates
-     * Returns array of libraries with distance, sorted by proximity
+     * Returns array of libraries with distance, sorted by proximity, limited to $limit
      */
     public static function getNearestLibraries($latitude, $longitude, $limit = 5)
     {

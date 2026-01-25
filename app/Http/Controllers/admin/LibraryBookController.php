@@ -26,9 +26,18 @@ class LibraryBookController extends Controller
 
     public function create(Library $library)
     {
-        // list all books to select
-        $books = Book::orderBy('title')->get();
-        return view('admin.libraries.books.create', compact('library', 'books'));
+        // Get books that are NOT in this library
+        $addedBookIds = $library->books()->pluck('book_id')->toArray();
+        $books = Book::whereNotIn('id', $addedBookIds)
+            ->orderBy('title')
+            ->get();
+        
+        // Calculate stats
+        $totalBooks = Book::count();
+        $addedCount = count($addedBookIds);
+        $remainingCount = $totalBooks - $addedCount;
+        
+        return view('admin.libraries.books.create', compact('library', 'books', 'addedCount', 'remainingCount', 'totalBooks'));
     }
 
     public function store(Request $request, Library $library)
@@ -37,6 +46,15 @@ class LibraryBookController extends Controller
             'book_id' => 'required|exists:books,id',
             'stock'   => 'required|integer|min:0',
         ]);
+
+        // Check if book is already in this library
+        $bookExists = $library->books()->where('book_id', $validated['book_id'])->exists();
+        
+        if ($bookExists) {
+            return redirect()->back()
+                ->with('error', 'Buku ini sudah ada di perpustakaan. Gunakan "Edit Stock" untuk mengubah jumlah stok.')
+                ->withInput();
+        }
 
         // attach or increment stock if already exists
         DB::transaction(function () use ($validated, $library) {
