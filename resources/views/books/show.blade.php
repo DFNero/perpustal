@@ -100,11 +100,11 @@
             </div>
         @endif
 
-        <!-- Nearest Libraries Section (if user is logged in) -->
+        <!-- Nearest Libraries Section (if user is logged in and has libraries in their city) -->
         @if(auth()->check() && count($nearestLibraries) > 0)
             <div class="bg-white rounded-lg shadow p-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">🏛️ Perpustakaan Terdekat</h3>
-                <p class="text-sm text-gray-600 mb-4">Berdasarkan lokasi Anda ({{ auth()->user()->name }})</p>
+                <h3 class="text-lg font-semibold text-gray-900 mb-2">🏛️ Perpustakaan di Kota Anda</h3>
+                <p class="text-sm text-gray-600 mb-4">{{ auth()->user()->city->name ?? 'Kota Anda' }} - Perpustakaan terdekat yang memiliki buku ini</p>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     @foreach($nearestLibraries as $lib)
@@ -134,6 +134,12 @@
                     @endforeach
                 </div>
             </div>
+        @elseif(auth()->check() && auth()->user()->city_id)
+            <div class="bg-yellow-50 rounded-lg shadow p-6 border border-yellow-200">
+                <h3 class="text-lg font-semibold text-yellow-900 mb-2">ℹ️ Buku Tidak Tersedia</h3>
+                <p class="text-sm text-yellow-800">Buku ini tidak tersedia di perpustakaan manapun di {{ auth()->user()->city->name ?? 'kota Anda' }}.</p>
+            </div>
+            </div>
         @endif
 
         <!-- Borrow Section -->
@@ -145,13 +151,20 @@
                     @csrf
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Pilih Perpustakaan</label>
-                        <select name="library_id" required class="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Pilih Perpustakaan di {{ auth()->user()->city->name ?? 'Kota Anda' }}</label>
+                        @php
+                            // Get only libraries in user's city
+                            $userCityLibraries = $book->libraries->filter(fn($lib) => $lib->city_id == auth()->user()->city_id);
+                        @endphp
+                        <select name="library_id" required class="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('library_id') border-red-500 @enderror">
                             <option value="">-- Pilih Perpustakaan --</option>
-                            @foreach ($book->libraries as $lib)
+                            @forelse ($userCityLibraries as $lib)
                                 <option value="{{ $lib->id }}">
                                     {{ $lib->name }} (stok: {{ $lib->pivot->stock }})
                                 </option>
+                            @empty
+                                <option value="" disabled>Tidak ada perpustakaan di kota Anda yang memiliki buku ini</option>
+                            @endforelse
                             @endforeach
                         </select>
                         @error('library_id')

@@ -25,13 +25,15 @@ class LibraryController extends Controller
 
     public function create()
     {
-        return view('admin.libraries.create');
+        $cities = \App\Models\City::orderBy('name')->get();
+        return view('admin.libraries.create', compact('cities'));
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
             'name' => 'required|string|max:255',
+            'city_id' => 'required|exists:cities,id',
             'address' => 'required|string',
             'latitude' => 'required|numeric|between:-90,90',
             'longitude' => 'required|numeric|between:-180,180',
@@ -44,13 +46,15 @@ class LibraryController extends Controller
 
     public function edit(Library $library)
     {
-        return view('admin.libraries.edit', compact('library'));
+        $cities = \App\Models\City::orderBy('name')->get();
+        return view('admin.libraries.edit', compact('library', 'cities'));
     }
 
     public function update(Request $request, Library $library)
     {
         $data = $request->validate([
             'name' => 'required|string|max:255',
+            'city_id' => 'required|exists:cities,id',
             'address' => 'required|string',
             'latitude' => 'required|numeric|between:-90,90',
             'longitude' => 'required|numeric|between:-180,180',

@@ -45,6 +45,14 @@ class BorrowingController extends Controller
             'library_id' => 'required|exists:libraries,id',
         ]);
 
+        // Verify library belongs to user's city
+        $library = \App\Models\Library::find($data['library_id']);
+        if ($library->city_id !== Auth::user()->city_id) {
+            return back()->withErrors([
+                'library_id' => 'Perpustakaan yang Anda pilih bukan di kota Anda.',
+            ]);
+        }
+
         // cek stok buku di library (pivot)
         $stock = $book->libraries()
             ->where('library_id', $data['library_id'])

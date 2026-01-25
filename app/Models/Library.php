@@ -11,10 +11,16 @@ class Library extends Model
 
     protected $fillable = [
         'name',
+        'city_id',
         'address',
         'latitude',
         'longitude',
     ];
+
+    public function city()
+    {
+        return $this->belongsTo(City::class);
+    }
 
     public function books()
     {

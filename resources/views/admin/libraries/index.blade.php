@@ -42,6 +42,7 @@
                     <thead class="bg-gray-100 border-b border-gray-300">
                         <tr>
                             <th class="text-left px-6 py-3 font-semibold text-gray-700">#</th>
+                            <th class="text-left px-6 py-3 font-semibold text-gray-700">Kota</th>
                             <th class="text-left px-6 py-3 font-semibold text-gray-700">Nama</th>
                             <th class="text-left px-6 py-3 font-semibold text-gray-700">Alamat</th>
                             <th class="text-left px-6 py-3 font-semibold text-gray-700">Koordinat</th>
@@ -52,11 +53,16 @@
                         @foreach($libraries as $lib)
                             <tr class="border-b border-gray-200 hover:bg-gray-50 transition">
                                 <td class="px-6 py-3 text-gray-900">{{ $loop->iteration }}</td>
+                                <td class="px-6 py-3 text-gray-900 font-medium">
+                                    <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
+                                        {{ $lib->city->name ?? 'N/A' }}
+                                    </span>
+                                </td>
                                 <td class="px-6 py-3 text-gray-900 font-medium">{{ $lib->name }}</td>
-                                <td class="px-6 py-3 text-gray-700 text-sm">{{ $lib->address }}</td>
-                                <td class="px-6 py-3 text-gray-700 text-sm">{{ $lib->latitude }}, {{ $lib->longitude }}</td>
+                                <td class="px-6 py-3 text-gray-700 text-sm">{{ Str::limit($lib->address, 30) }}</td>
+                                <td class="px-6 py-3 text-gray-700 text-sm text-xs">{{ $lib->latitude }}, {{ $lib->longitude }}</td>
                                 <td class="px-6 py-3 text-sm space-x-2">
-                                    <a href="{{ route('admin.libraries.books.index', $lib) }}" class="text-blue-600 hover:underline">Kelola Buku</a>
+                                    <a href="{{ route('admin.libraries.books.index', $lib) }}" class="text-blue-600 hover:underline">Buku</a>
                                     <a href="{{ route('admin.libraries.edit', $lib) }}" class="text-blue-600 hover:underline">Edit</a>
                                     <form action="{{ route('admin.libraries.destroy', $lib) }}" method="POST" style="display:inline" onsubmit="return confirm('Hapus perpustakaan ini?');">
                                         @csrf

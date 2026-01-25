@@ -48,17 +48,18 @@ class BookController extends Controller
     {
         $book->load('category', 'libraries');
         
-        // Get all libraries with distance if user is logged in and has location
+        // Get libraries in user's city, sorted by distance (if user is logged in)
         $nearestLibraries = [];
-        if (auth()->check() && auth()->user()->latitude && auth()->user()->longitude) {
-            // Get ALL libraries sorted by distance
-            $allLibrariesWithDistance = \App\Helpers\DistanceHelper::getAllLibrariesWithDistance(
+        if (auth()->check() && auth()->user()->city_id && auth()->user()->latitude && auth()->user()->longitude) {
+            // Get libraries only from user's city, sorted by distance
+            $allLibrariesInCity = \App\Helpers\DistanceHelper::getLibrariesInUserCity(
+                auth()->user()->city_id,
                 auth()->user()->latitude,
                 auth()->user()->longitude
             );
             
             // Filter to only show libraries that have this book
-            $nearestLibraries = array_filter($allLibrariesWithDistance, function ($lib) use ($book) {
+            $nearestLibraries = array_filter($allLibrariesInCity, function ($lib) use ($book) {
                 return $book->libraries->contains('id', $lib['id']);
             });
         }
