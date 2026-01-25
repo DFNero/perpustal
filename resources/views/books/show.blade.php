@@ -165,7 +165,6 @@
                             @empty
                                 <option value="" disabled>Tidak ada perpustakaan di kota Anda yang memiliki buku ini</option>
                             @endforelse
-                            @endforeach
                         </select>
                         @error('library_id')
                             <span class="text-red-600 text-sm">{{ $message }}</span>
