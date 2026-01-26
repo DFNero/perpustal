@@ -59,6 +59,13 @@
                 <div x-show="!sidebarOpen" x-transition.opacity class="absolute left-full ml-3 z-50 w-max px-2 py-1 bg-gray-900 text-white text-xs rounded-md shadow-lg">Approved</div>
             </a>
 
+            <!-- Ban User -->
+            <a href="{{ route('staff.users.index') }}" class="relative flex items-center gap-3 px-3 py-3 rounded-lg group transition-all duration-200 {{ request()->routeIs('staff.users.*') ? 'bg-red-600 text-white shadow-lg shadow-red-900/50' : 'hover:bg-gray-800 text-gray-400 hover:text-white' }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/><line x1="19.07" y1="4.93" x2="4.93" y2="19.07"/></svg>
+                <span x-show="sidebarOpen" class="font-medium whitespace-nowrap">Ban User</span>
+                <div x-show="!sidebarOpen" x-transition.opacity class="absolute left-full ml-3 z-50 w-max px-2 py-1 bg-gray-900 text-white text-xs rounded-md shadow-lg">Ban User</div>
+            </a>
+
             <!-- Activity Log -->
             <a href="{{ route('staff.activity-log.index') }}" class="relative flex items-center gap-3 px-3 py-3 rounded-lg group transition-all duration-200 {{ request()->routeIs('staff.activity-log.*') ? 'bg-orange-600 text-white' : 'hover:bg-gray-800 text-gray-400 hover:text-white' }}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>

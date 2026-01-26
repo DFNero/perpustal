@@ -110,10 +110,15 @@ Route::middleware(['auth', 'role:staff'])
         
         Route::patch('/borrowings/{borrowing}/return', [StaffBorrowingController::class, 'markAsReturned'])
             ->name('borrowings.return');
-
-        Route::post('/borrowings/{user}/ban', [StaffBorrowingController::class, 'banUser'])
-            ->name('borrowings.ban');
         // end line borrowings
+
+        // line users (ban management)
+        Route::get('/users', [\App\Http\Controllers\Staff\UserController::class, 'index'])
+            ->name('users.index');
+        
+        Route::post('/users/{user}/ban', [\App\Http\Controllers\Staff\UserController::class, 'ban'])
+            ->name('users.ban');
+        // end line users
 
         // line books
         Route::get('/books', [StaffBookController::class, 'index'])

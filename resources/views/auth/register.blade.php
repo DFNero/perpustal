@@ -72,7 +72,7 @@
                     <p class="text-slate-500 mt-2">Lengkapi formulir di bawah ini untuk mendaftar.</p>
                 </div>
 
-                <form method="POST" action="{{ route('register') }}" class="space-y-4" autocomplete="off">
+                <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data" class="space-y-4" autocomplete="off">
                     @csrf
 
                     <!-- Name -->
@@ -183,7 +183,7 @@
                                 type="file" 
                                 id="ktp_photo" 
                                 name="ktp_photo" 
-                                accept="image/jpeg,image/png,image/jpg" 
+                                accept="image/jpeg,image/png,image/jpg,.jpg,.jpeg,.png" 
                                 required
                                 class="hidden"
                                 onchange="updateKtpPreview(this)"

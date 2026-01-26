@@ -2,9 +2,14 @@
 
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl">
-            Pengembalian Buku (Approved)
-        </h2>
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl">
+                Pengembalian Buku (Approved)
+            </h2>
+            <a href="{{ route('staff.borrowings.index') }}" class="text-blue-600 hover:underline text-sm">
+                ← Kembali ke Pending
+            </a>
+        </div>
     </x-slot>
 
     <div class="p-6 space-y-4">
@@ -62,18 +67,6 @@
 
                     <!-- Return Condition Form Modal -->
                     <x-return-condition-form :borrowing="$b" />
-
-                    <!-- Ban User Button -->
-                    <button 
-                        type="button" 
-                        onclick="openBanModal({{ $b->user->id }})"
-                        title="Ban user from system"
-                        class="w-full bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800 transition-colors">
-                        🚫 Ban User
-                    </button>
-
-                    <!-- Ban Modal -->
-                    <x-ban-modal :user="$b->user" />
                 </div>
             </div>
         @empty

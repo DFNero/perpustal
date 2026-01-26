@@ -47,16 +47,16 @@
                             ->pivot
                             ->stock > 0
                     )
-                        <!-- Approve Button (opens duration selector modal) -->
+                        <!-- Approve Button (opens date range selector modal) -->
                         <button 
                             type="button" 
-                            onclick="openDurationModal({{ $b->id }})"
+                            onclick="openDateRangeModal({{ $b->id }})"
                             class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition-colors">
                             Approve
                         </button>
 
-                        <!-- Duration Selector Modal -->
-                        <x-duration-selector :borrowing="$b" />
+                        <!-- Date Range Selector Modal -->
+                        <x-date-range-selector :borrowing="$b" />
                     @else
                         <span class="text-red-600 text-sm">
                             Stok habis
@@ -70,18 +70,6 @@
                             Reject
                         </button>
                     </form>
-
-                    <!-- Ban User Button -->
-                    <button 
-                        type="button" 
-                        onclick="openBanModal({{ $b->user->id }})"
-                        title="Ban user from system"
-                        class="bg-gray-700 text-white px-3 py-1 rounded hover:bg-gray-800 transition-colors">
-                        🚫 Ban
-                    </button>
-
-                    <!-- Ban Modal -->
-                    <x-ban-modal :user="$b->user" />
                 </div>
             </div>
         @empty

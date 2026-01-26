@@ -1,16 +1,17 @@
+table yang dimiliki oleh project ini
 
-mysql> use perpustal
-Database changed
 mysql> show tables;
 +-----------------------+
 | Tables_in_perpustal   |
 +-----------------------+
+| activity_logs         |
 | book_library          |
 | books                 |
 | borrowings            |
 | cache                 |
 | cache_locks           |
 | categories            |
+| cities                |
 | failed_jobs           |
 | job_batches           |
 | jobs                  |
@@ -18,10 +19,44 @@ mysql> show tables;
 | migrations            |
 | notifications         |
 | password_reset_tokens |
+| reviews               |
 | sessions              |
 | users                 |
 +-----------------------+
-15 rows in set (0.29 sec)
+
+mysql> desc activity_logs;
++---------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------+-----+---------+----------------+
+| Field         | Type
+
+                                                                                        | Null | Key | Default | Extra          |
++---------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------+-----+---------+----------------+
+| id            | bigint unsigned
+
+                                                                                        | NO   | PRI | NULL    | auto_increment |
+| user_id       | bigint unsigned
+
+                                                                                        | NO   | MUL | NULL    |                |
+| activity_type | enum('user_borrow','user_return_request','user_cancel_borrow','user_review','user_delete_review','staff_approve_borrow','staff_reject_borrow','staff_process_return','staff_add_book','staff_update_book','staff_add_book_to_library','staff_update_stock','staff_remove_book_from_library','user_banned','admin_ban_user','admin_unban_user','admin_delete_category','admin_create_category','admin_manage_staff') | NO   |     | NULL    |                |
+| resource_type | enum('Book','Borrowing','Review','User','Category','Library')
+
+                                                                                        | NO   | MUL | NULL    |                |
+| resource_id   | bigint unsigned
+
+                                                                                        | NO   |     | NULL    |                |
+| description   | text
+
+                                                                                        | YES  |     | NULL    |                |
+| metadata      | json
+
+                                                                                        | YES  |     | NULL    |                |
+| created_at    | timestamp
+
+                                                                                        | YES  | MUL | NULL    |                |
+| updated_at    | timestamp
+
+                                                                                        | YES  |     | NULL    |                |
++---------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+------+-----+---------+----------------+
+9 rows in set (0.68 sec)
 
 mysql> desc book_library;
 +------------+-----------------+------+-----+---------+----------------+
@@ -34,7 +69,7 @@ mysql> desc book_library;
 | created_at | timestamp       | YES  |     | NULL    |                |
 | updated_at | timestamp       | YES  |     | NULL    |                |
 +------------+-----------------+------+-----+---------+----------------+
-6 rows in set (0.09 sec)
+6 rows in set (0.05 sec)
 
 mysql> desc books;
 +--------------+-----------------+------+-----+---------+----------------+
@@ -57,22 +92,27 @@ mysql> desc books;
 13 rows in set (0.00 sec)
 
 mysql> desc borrowings;
-+-------------+--------------------------------------------------+------+-----+---------+----------------+
-| Field       | Type                                             | Null | Key | Default | Extra          |
-+-------------+--------------------------------------------------+------+-----+---------+----------------+
-| id          | bigint unsigned                                  | NO   | PRI | NULL    | auto_increment |
-| user_id     | bigint unsigned                                  | NO   | MUL | NULL    |                |
-| book_id     | bigint unsigned                                  | NO   | MUL | NULL    |                |
-| library_id  | bigint unsigned                                  | NO   | MUL | NULL    |                |
-| status      | enum('pending','approved','rejected','returned') | NO   |     | pending |                |
-| staff_id    | bigint unsigned                                  | YES  | MUL | NULL    |                |
-| borrow_date | date                                             | YES  |     | NULL    |                |
-| return_date | date                                             | YES  |     | NULL    |                |
-| notes       | text                                             | YES  |     | NULL    |                |
-| created_at  | timestamp                                        | YES  |     | NULL    |                |
-| updated_at  | timestamp                                        | YES  |     | NULL    |                |
-+-------------+--------------------------------------------------+------+-----+---------+----------------+
-11 rows in set (0.00 sec)
++------------------+--------------------------------------------------+------+-----+---------+----------------+
+| Field            | Type                                             | Null | Key | Default | Extra          |
++------------------+--------------------------------------------------+------+-----+---------+----------------+
+| id               | bigint unsigned                                  | NO   | PRI | NULL    | auto_increment |
+| user_id          | bigint unsigned                                  | NO   | MUL | NULL    |                |
+| book_id          | bigint unsigned                                  | NO   | MUL | NULL    |                |
+| library_id       | bigint unsigned                                  | NO   | MUL | NULL    |                |
+| status           | enum('pending','approved','rejected','returned') | NO   |     | pending |                |
+| staff_id         | bigint unsigned                                  | YES  | MUL | NULL    |                |
+| borrow_date      | date                                             | YES  |     | NULL    |                |
+| return_date      | date                                             | YES  |     | NULL    |                |
+| canceled_at      | timestamp                                        | YES  |     | NULL    |                |
+| cancel_reason    | text                                             | YES  |     | NULL    |                |
+| notes            | text                                             | YES  |     | NULL    |                |
+| created_at       | timestamp                                        | YES  |     | NULL    |                |
+| updated_at       | timestamp                                        | YES  |     | NULL    |                |
+| due_date         | date                                             | YES  |     | NULL    |                |
+| return_condition | enum('good','fair','damaged')                    | YES  |     | NULL    |                |
+| damage_notes     | text                                             | YES  |     | NULL    |                |
++------------------+--------------------------------------------------+------+-----+---------+----------------+
+16 rows in set (0.00 sec)
 
 mysql> desc categories;
 +------------+-----------------+------+-----+---------+----------------+
@@ -85,7 +125,20 @@ mysql> desc categories;
 | updated_at | timestamp       | YES  |     | NULL    |                |
 | deleted_at | timestamp       | YES  |     | NULL    |                |
 +------------+-----------------+------+-----+---------+----------------+
-6 rows in set (0.03 sec)
+6 rows in set (0.05 sec)
+
+mysql> desc cities;
++------------+-----------------+------+-----+---------+----------------+
+| Field      | Type            | Null | Key | Default | Extra          |
++------------+-----------------+------+-----+---------+----------------+
+| id         | bigint unsigned | NO   | PRI | NULL    | auto_increment |
+| name       | varchar(255)    | NO   | UNI | NULL    |                |
+| latitude   | decimal(10,8)   | NO   |     | NULL    |                |
+| longitude  | decimal(11,8)   | NO   |     | NULL    |                |
+| created_at | timestamp       | YES  |     | NULL    |                |
+| updated_at | timestamp       | YES  |     | NULL    |                |
++------------+-----------------+------+-----+---------+----------------+
+6 rows in set (0.00 sec)
 
 mysql> desc libraries;
 +------------+-----------------+------+-----+---------+----------------+
@@ -99,23 +152,8 @@ mysql> desc libraries;
 | created_at | timestamp       | YES  |     | NULL    |                |
 | updated_at | timestamp       | YES  |     | NULL    |                |
 | deleted_at | timestamp       | YES  |     | NULL    |                |
+| city_id    | bigint unsigned | YES  | MUL | NULL    |                |
 +------------+-----------------+------+-----+---------+----------------+
-8 rows in set (0.00 sec)
-
-mysql> desc users;
-+-------------------+-----------------+------+-----+---------+----------------+
-| Field             | Type            | Null | Key | Default | Extra          |
-+-------------------+-----------------+------+-----+---------+----------------+
-| id                | bigint unsigned | NO   | PRI | NULL    | auto_increment |
-| name              | varchar(255)    | NO   |     | NULL    |                |
-| email             | varchar(255)    | NO   | UNI | NULL    |                |
-| role              | varchar(255)    | NO   |     | user    |                |
-| email_verified_at | timestamp       | YES  |     | NULL    |                |
-| password          | varchar(255)    | NO   |     | NULL    |                |
-| remember_token    | varchar(100)    | YES  |     | NULL    |                |
-| created_at        | timestamp       | YES  |     | NULL    |                |
-| updated_at        | timestamp       | YES  |     | NULL    |                |
-+-------------------+-----------------+------+-----+---------+----------------+
 9 rows in set (0.00 sec)
 
 mysql> desc notifications;
@@ -131,5 +169,60 @@ mysql> desc notifications;
 | created_at      | timestamp       | YES  |     | NULL    |       |
 | updated_at      | timestamp       | YES  |     | NULL    |       |
 +-----------------+-----------------+------+-----+---------+-------+
-8 rows in set (0.00 sec)
+8 rows in set (0.04 sec)
 
+mysql> desc reviews
+    -> ;
++------------+-----------------+------+-----+---------+----------------+
+| Field      | Type            | Null | Key | Default | Extra          |
++------------+-----------------+------+-----+---------+----------------+
+| id         | bigint unsigned | NO   | PRI | NULL    | auto_increment |
+| book_id    | bigint unsigned | NO   | MUL | NULL    |                |
+| user_id    | bigint unsigned | NO   | MUL | NULL    |                |
+| rating     | int             | NO   |     | 5       |                |
+| comment    | text            | YES  |     | NULL    |                |
+| created_at | timestamp       | YES  |     | NULL    |                |
+| updated_at | timestamp       | YES  |     | NULL    |                |
++------------+-----------------+------+-----+---------+----------------+
+7 rows in set (0.04 sec)
+
+mysql> desc sessions;
++---------------+-----------------+------+-----+---------+-------+
+| Field         | Type            | Null | Key | Default | Extra |
++---------------+-----------------+------+-----+---------+-------+
+| id            | varchar(255)    | NO   | PRI | NULL    |       |
+| user_id       | bigint unsigned | YES  | MUL | NULL    |       |
+| ip_address    | varchar(45)     | YES  |     | NULL    |       |
+| user_agent    | text            | YES  |     | NULL    |       |
+| payload       | longtext        | NO   |     | NULL    |       |
+| last_activity | int             | NO   | MUL | NULL    |       |
++---------------+-----------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+
+mysql> desc users;
++-------------------+-----------------+------+-----+---------+----------------+
+| Field             | Type            | Null | Key | Default | Extra          |
++-------------------+-----------------+------+-----+---------+----------------+
+| id                | bigint unsigned | NO   | PRI | NULL    | auto_increment |
+| name              | varchar(255)    | NO   |     | NULL    |                |
+| email             | varchar(255)    | NO   | UNI | NULL    |                |
+| ktp_number        | varchar(16)     | YES  | UNI | NULL    |                |
+| ktp_photo_path    | varchar(255)    | YES  |     | NULL    |                |
+| role              | varchar(255)    | NO   |     | user    |                |
+| email_verified_at | timestamp       | YES  |     | NULL    |                |
+| password          | varchar(255)    | NO   |     | NULL    |                |
+| remember_token    | varchar(100)    | YES  |     | NULL    |                |
+| created_at        | timestamp       | YES  |     | NULL    |                |
+| updated_at        | timestamp       | YES  |     | NULL    |                |
+| ban_until         | timestamp       | YES  |     | NULL    |                |
+| banned_reason     | text            | YES  |     | NULL    |                |
+| latitude          | decimal(10,8)   | YES  |     | NULL    |                |
+| longitude         | decimal(11,8)   | YES  |     | NULL    |                |
+| city_id           | bigint unsigned | YES  | MUL | NULL    |                |
++-------------------+-----------------+------+-----+---------+----------------+
+16 rows in set (0.00 sec)
+
+mysql>
+
+struktur tabel yang digunakan dalam project ini
+kalo masih kurang paham. check databases/migrations, untuk mengerti apa saja table nya habsi di apaain, dan seeder jnya buat tau apa aja data data nya walaupun gk sesuai tapi fokus ke struktur nya

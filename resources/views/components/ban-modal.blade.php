@@ -16,7 +16,7 @@
             </div>
 
             <!-- Ban Reason -->
-            <form id="banForm-{{ $user->id }}" action="{{ route('staff.borrowings.ban', $user->id) }}" method="POST" class="space-y-4">
+            <form id="banForm-{{ $user->id }}" action="{{ route('staff.users.ban', $user->id) }}" method="POST" class="space-y-4">
                 @csrf
                 
                 <div>

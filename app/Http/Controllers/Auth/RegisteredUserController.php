@@ -38,7 +38,7 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'city' => ['required', 'exists:cities,id'],
             'ktp_number' => ['required', 'string', 'size:16', 'unique:users,ktp_number', 'regex:/^[0-9]{16}$/'],
-            'ktp_photo' => ['required', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
+            'ktp_photo' => ['required', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
         ], [
             'ktp_number.size' => 'Nomor KTP harus 16 digit',
             'ktp_number.regex' => 'Nomor KTP hanya boleh berisi angka',

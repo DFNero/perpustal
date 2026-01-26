@@ -28,8 +28,8 @@
                     Kondisi Buku <span class="text-red-500">*</span>
                 </label>
                 <div class="space-y-3">
-                    <!-- Good Condition -->
-                    <div class="flex items-start">
+                    <!-- Good Condition (Aman - Hijau) -->
+                    <div class="flex items-start p-3 rounded-lg border-2 border-green-200 bg-green-50">
                         <input 
                             type="radio" 
                             id="condition_good-{{ $borrowing->id }}" 
@@ -39,27 +39,13 @@
                             checked
                             class="w-4 h-4 text-green-600 mt-1 cursor-pointer">
                         <label for="condition_good-{{ $borrowing->id }}" class="ml-3 cursor-pointer flex-1">
-                            <span class="font-semibold text-gray-900">✅ Baik</span>
-                            <span class="text-sm text-gray-500 block">Tidak ada kerusakan, kondisi sempurna</span>
+                            <span class="font-semibold text-green-900 text-lg">✅ Aman</span>
+                            <span class="text-sm text-green-700 block mt-1">Buku dalam kondisi baik, tidak ada kerusakan. Stok akan dikembalikan.</span>
                         </label>
                     </div>
 
-                    <!-- Fair Condition -->
-                    <div class="flex items-start">
-                        <input 
-                            type="radio" 
-                            id="condition_fair-{{ $borrowing->id }}" 
-                            name="condition" 
-                            value="fair" 
-                            class="w-4 h-4 text-yellow-600 mt-1 cursor-pointer">
-                        <label for="condition_fair-{{ $borrowing->id }}" class="ml-3 cursor-pointer flex-1">
-                            <span class="font-semibold text-gray-900">⚠️ Sedang</span>
-                            <span class="text-sm text-gray-500 block">Sedikit keausan atau goresan ringan</span>
-                        </label>
-                    </div>
-
-                    <!-- Damaged Condition -->
-                    <div class="flex items-start">
+                    <!-- Damaged Condition (Rusak - Merah) -->
+                    <div class="flex items-start p-3 rounded-lg border-2 border-red-200 bg-red-50">
                         <input 
                             type="radio" 
                             id="condition_damaged-{{ $borrowing->id }}" 
@@ -67,8 +53,8 @@
                             value="damaged" 
                             class="w-4 h-4 text-red-600 mt-1 cursor-pointer">
                         <label for="condition_damaged-{{ $borrowing->id }}" class="ml-3 cursor-pointer flex-1">
-                            <span class="font-semibold text-gray-900">❌ Rusak</span>
-                            <span class="text-sm text-gray-500 block">Kerusakan signifikan, tidak dapat diperbaiki</span>
+                            <span class="font-semibold text-red-900 text-lg">❌ Rusak</span>
+                            <span class="text-sm text-red-700 block mt-1">Buku rusak atau hilang. Stok akan dikurangi 1.</span>
                         </label>
                     </div>
                 </div>
@@ -83,7 +69,8 @@
                     id="damageNotes-{{ $borrowing->id }}" 
                     name="damage_notes" 
                     rows="3" 
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none"
+                    disabled
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none disabled:bg-gray-100 disabled:cursor-not-allowed"
                     placeholder="Jelaskan jenis dan tingkat kerusakan...">{{ old('damage_notes') }}</textarea>
                 <p class="text-xs text-gray-500 mt-1">Wajib diisi jika kondisi rusak</p>
             </div>
@@ -128,16 +115,22 @@ function closeReturnModal(borrowingId) {
 function setupConditionToggle(borrowingId) {
     const container = document.getElementById(`damageNotesContainer-${borrowingId}`);
     const textarea = document.getElementById(`damageNotes-${borrowingId}`);
-    const radios = document.querySelectorAll(`#returnForm-${borrowingId} input[name="condition"]`);
+    const form = document.getElementById(`returnForm-${borrowingId}`);
+    const radios = form.querySelectorAll(`input[name="condition"]`);
     
     function updateDamageNotesVisibility() {
-        const selectedCondition = document.querySelector(`input[name="condition"][value="damaged"]`).checked;
-        if (selectedCondition) {
+        // Find the checked radio button
+        const checkedRadio = form.querySelector(`input[name="condition"]:checked`);
+        const isDamaged = checkedRadio && checkedRadio.value === 'damaged';
+        
+        if (isDamaged) {
             container.classList.remove('hidden');
-            textarea.required = true;
+            textarea.setAttribute('required', 'required');
+            textarea.removeAttribute('disabled');
         } else {
             container.classList.add('hidden');
-            textarea.required = false;
+            textarea.removeAttribute('required');
+            textarea.setAttribute('disabled', 'disabled');
             textarea.value = '';
         }
     }
