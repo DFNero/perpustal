@@ -29,6 +29,17 @@ class AuthenticatedSessionController extends Controller
 
         $user = auth()->user();
 
+        // Check if user is banned
+        if ($user->isBanned()) {
+            Auth::guard('web')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            
+            return redirect('/')->withErrors([
+                'email' => 'Akun Anda telah dilarang dari sistem. Alasan: ' . ($user->banned_reason ?? 'Tidak ada keterangan')
+            ]);
+        }
+
         if ($user->role === 'admin') {
             return redirect()->route('admin.dashboard');
         }

@@ -24,6 +24,7 @@ class ActivityController extends Controller
                 'staff_add_book_to_library',
                 'staff_update_stock',
                 'staff_remove_book_from_library',
+                'user_banned',  // New: staff banning users
             ])
             ->newest();
 

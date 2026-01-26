@@ -48,77 +48,7 @@
         </div>
 
         @forelse ($borrowings as $b)
-            <div class="border p-4 rounded flex justify-between items-start bg-white shadow-sm hover:shadow-md transition">
-                <div>
-                    <p class="font-bold text-gray-900">{{ $b->book->title }}</p>
-                    <p class="text-sm text-gray-600">
-                        Penulis: {{ $b->book->author }}
-                    </p>
-                    <p class="text-sm text-gray-600">
-                        Perpustakaan: {{ $b->library->name }}
-                    </p>
-                    <p class="text-sm text-gray-600">
-                        Tanggal Pengajuan: {{ $b->created_at->format('d M Y') }}
-                    </p>
-                </div>
-
-                {{-- STATUS & ACTIONS --}}
-                <div class="text-right space-y-2">
-                    @if ($b->canceled_at)
-                        {{-- Show canceled status --}}
-                        <span class="inline-block bg-gray-100 text-gray-800 px-3 py-1 rounded text-sm">
-                            ❌ Dibatalkan
-                        </span>
-                        <p class="text-xs text-gray-500">
-                            Dibatalkan: {{ $b->canceled_at->format('d M Y H:i') }}
-                        </p>
-                    @elseif ($b->status === 'pending')
-                        <span class="inline-block bg-yellow-100 text-yellow-800 px-3 py-1 rounded text-sm">
-                            Menunggu Persetujuan
-                        </span>
-                        {{-- Cancel Button for Pending --}}
-                        <form method="POST" action="{{ route('borrowings.cancel', $b) }}" 
-                              onsubmit="return confirm('Apakah Anda yakin ingin membatalkan peminjaman ini?');" 
-                              class="inline-block">
-                            @csrf
-                            <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm font-medium transition">
-                                Batalkan
-                            </button>
-                        </form>
-                    @elseif ($b->status === 'approved')
-                        <span class="inline-block bg-green-100 text-green-800 px-3 py-1 rounded text-sm">
-                            Disetujui
-                        </span>
-                        @if ($b->borrow_date)
-                            <p class="text-xs text-gray-500">
-                                Dipinjam: {{ \Carbon\Carbon::parse($b->borrow_date)->format('d M Y') }}
-                            </p>
-                        @endif
-                        {{-- Cancel Button for Approved --}}
-                        <form method="POST" action="{{ route('borrowings.cancel', $b) }}" 
-                              onsubmit="return confirm('Apakah Anda yakin ingin membatalkan peminjaman ini?');" 
-                              class="inline-block">
-                            @csrf
-                            <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm font-medium transition">
-                                Batalkan
-                            </button>
-                        </form>
-                    @elseif ($b->status === 'rejected')
-                        <span class="inline-block bg-red-100 text-red-800 px-3 py-1 rounded text-sm">
-                            Ditolak
-                        </span>
-                    @elseif ($b->status === 'returned')
-                        <span class="inline-block bg-gray-100 text-gray-800 px-3 py-1 rounded text-sm">
-                            Dikembalikan
-                        </span>
-                        @if ($b->return_date)
-                            <p class="text-xs text-gray-500">
-                                Dikembalikan: {{ \Carbon\Carbon::parse($b->return_date)->format('d M Y') }}
-                            </p>
-                        @endif
-                    @endif
-                </div>
-            </div>
+            <x-borrowing-card :borrowing="$b" />
         @empty
             <div class="text-center py-8 text-gray-500 bg-white rounded-lg">
                 <p>Anda belum memiliki riwayat peminjaman.</p>

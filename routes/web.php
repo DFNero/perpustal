@@ -110,6 +110,9 @@ Route::middleware(['auth', 'role:staff'])
         
         Route::patch('/borrowings/{borrowing}/return', [StaffBorrowingController::class, 'markAsReturned'])
             ->name('borrowings.return');
+
+        Route::post('/borrowings/{user}/ban', [StaffBorrowingController::class, 'banUser'])
+            ->name('borrowings.ban');
         // end line borrowings
 
         // line books

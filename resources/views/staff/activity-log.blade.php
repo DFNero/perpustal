@@ -32,6 +32,7 @@
                             <option value="staff_add_book_to_library" {{ request('activity_type') === 'staff_add_book_to_library' ? 'selected' : '' }}>Tambah Buku ke Perpustakaan</option>
                             <option value="staff_update_stock" {{ request('activity_type') === 'staff_update_stock' ? 'selected' : '' }}>Update Stok</option>
                             <option value="staff_remove_book_from_library" {{ request('activity_type') === 'staff_remove_book_from_library' ? 'selected' : '' }}>Hapus Buku dari Perpustakaan</option>
+                            <option value="user_banned" {{ request('activity_type') === 'user_banned' ? 'selected' : '' }}>Pelarangan Pengguna</option>
                         </select>
                     </div>
 
@@ -79,6 +80,10 @@
                             @elseif ($activity->activity_type === 'staff_process_return')
                                 <span class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded text-sm font-medium">
                                     📤 Proses Pengembalian
+                                </span>
+                            @elseif ($activity->activity_type === 'user_banned')
+                                <span class="inline-block bg-red-100 text-red-800 px-3 py-1 rounded text-sm font-medium">
+                                    🚫 Pelarangan Pengguna
                                 </span>
                             @elseif (str_starts_with($activity->activity_type, 'staff_add_book') || str_starts_with($activity->activity_type, 'staff_update_book'))
                                 <span class="inline-block bg-cyan-100 text-cyan-800 px-3 py-1 rounded text-sm font-medium">

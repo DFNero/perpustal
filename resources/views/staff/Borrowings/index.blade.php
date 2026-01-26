@@ -47,13 +47,16 @@
                             ->pivot
                             ->stock > 0
                     )
-                        <form method="POST" action="{{ route('staff.borrowings.approve', $b) }}">
-                            @csrf
-                            @method('PATCH')
-                            <button class="bg-green-600 text-white px-3 py-1 rounded">
-                                Approve
-                            </button>
-                        </form>
+                        <!-- Approve Button (opens duration selector modal) -->
+                        <button 
+                            type="button" 
+                            onclick="openDurationModal({{ $b->id }})"
+                            class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition-colors">
+                            Approve
+                        </button>
+
+                        <!-- Duration Selector Modal -->
+                        <x-duration-selector :borrowing="$b" />
                     @else
                         <span class="text-red-600 text-sm">
                             Stok habis
@@ -67,6 +70,18 @@
                             Reject
                         </button>
                     </form>
+
+                    <!-- Ban User Button -->
+                    <button 
+                        type="button" 
+                        onclick="openBanModal({{ $b->user->id }})"
+                        title="Ban user from system"
+                        class="bg-gray-700 text-white px-3 py-1 rounded hover:bg-gray-800 transition-colors">
+                        🚫 Ban
+                    </button>
+
+                    <!-- Ban Modal -->
+                    <x-ban-modal :user="$b->user" />
                 </div>
             </div>
         @empty

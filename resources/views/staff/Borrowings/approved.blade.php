@@ -46,17 +46,34 @@
                     </p>
                 </div>
 
-                <div class="text-right">
-                    <span class="inline-block bg-green-100 text-green-800 px-3 py-1 rounded text-sm mb-3">
-                        Disetujui
-                    </span>
-                    <form method="POST" action="{{ route('staff.borrowings.return', $b) }}" style="display:inline">
-                        @csrf
-                        @method('PATCH')
-                        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                            Tandai Sebagai Dikembalikan
-                        </button>
-                    </form>
+                <div class="text-right space-y-2">
+                    <div>
+                        <span class="inline-block bg-green-100 text-green-800 px-3 py-1 rounded text-sm">
+                            Disetujui
+                        </span>
+                    </div>
+                    <!-- Return Button (opens condition form modal) -->
+                    <button 
+                        type="button" 
+                        onclick="openReturnModal({{ $b->id }})"
+                        class="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors">
+                        Catat Pengembalian
+                    </button>
+
+                    <!-- Return Condition Form Modal -->
+                    <x-return-condition-form :borrowing="$b" />
+
+                    <!-- Ban User Button -->
+                    <button 
+                        type="button" 
+                        onclick="openBanModal({{ $b->user->id }})"
+                        title="Ban user from system"
+                        class="w-full bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800 transition-colors">
+                        🚫 Ban User
+                    </button>
+
+                    <!-- Ban Modal -->
+                    <x-ban-modal :user="$b->user" />
                 </div>
             </div>
         @empty
