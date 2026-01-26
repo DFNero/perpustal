@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
@@ -30,7 +31,19 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $data = $request->validated();
+
+        // Handle KTP photo upload
+        if ($request->hasFile('ktp_photo')) {
+            // Delete old KTP photo if it exists
+            if ($request->user()->ktp_photo_path) {
+                Storage::disk('public')->delete($request->user()->ktp_photo_path);
+            }
+            // Store new KTP photo
+            $data['ktp_photo_path'] = $request->file('ktp_photo')->store('ktp-photos', 'public');
+        }
+
+        $request->user()->fill($data);
         $request->user()->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');

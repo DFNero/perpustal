@@ -149,6 +149,63 @@
                         <p class="text-xs text-gray-500 mt-1 ml-1">Pilih lokasi Anda untuk rekomendasi terdekat</p>
                     </div>
 
+                    <!-- KTP Number (16 Digits) -->
+                    <div class="group">
+                        <label for="ktp_number" class="block text-sm font-semibold text-slate-700 mb-1">Nomor KTP <span class="text-red-500">*</span></label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-gray-400 group-focus-within:text-orange-500 transition-colors" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v10a2 2 0 002 2h5m0 0h5a2 2 0 002-2V8a2 2 0 00-2-2h-5m0 0V5a2 2 0 012-2h1a2 2 0 012 2v1m0 0h6a2 2 0 012 2v10a2 2 0 01-2 2h-6m0 0v5a2 2 0 01-2 2H9a2 2 0 01-2-2v-5" />
+                                </svg>
+                            </div>
+                            <x-text-input 
+                                id="ktp_number" 
+                                class="block w-full pl-10 bg-white border border-gray-300 text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 rounded-xl transition duration-200" 
+                                type="text" 
+                                name="ktp_number" 
+                                :value="old('ktp_number')" 
+                                required 
+                                autocomplete="off" 
+                                placeholder="1234567890123456"
+                                maxlength="16"
+                                inputmode="numeric"
+                            />
+                        </div>
+                        <x-input-error :messages="$errors->get('ktp_number')" class="mt-1.5 text-sm text-red-500" />
+                        <p class="text-xs text-gray-500 mt-1 ml-1">Masukkan 16 digit nomor KTP Anda</p>
+                    </div>
+
+                    <!-- KTP Photo Upload -->
+                    <div class="group">
+                        <label for="ktp_photo" class="block text-sm font-semibold text-slate-700 mb-1">Foto KTP <span class="text-red-500">*</span></label>
+                        <div class="relative">
+                            <input 
+                                type="file" 
+                                id="ktp_photo" 
+                                name="ktp_photo" 
+                                accept="image/jpeg,image/png,image/jpg" 
+                                required
+                                class="hidden"
+                                onchange="updateKtpPreview(this)"
+                            />
+                            <label for="ktp_photo" class="flex items-center justify-center w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-orange-500 hover:bg-orange-50 transition-colors duration-200 bg-white">
+                                <div class="text-center">
+                                    <svg class="mx-auto h-8 w-8 text-gray-400 group-focus-within:text-orange-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                                    </svg>
+                                    <p class="mt-2 text-sm text-gray-600"><span class="font-semibold text-orange-600">Klik untuk upload</span> atau drag & drop</p>
+                                    <p class="text-xs text-gray-500">JPG, PNG hingga 2MB</p>
+                                </div>
+                                <span id="ktp-filename" class="hidden ml-2 text-sm text-green-600 font-medium"></span>
+                            </label>
+                        </div>
+                        <!-- KTP Preview -->
+                        <div id="ktp-preview-container" class="mt-3 hidden">
+                            <img id="ktp-preview" src="" alt="KTP Preview" class="w-full h-32 object-cover rounded-lg border border-gray-300">
+                        </div>
+                        <x-input-error :messages="$errors->get('ktp_photo')" class="mt-1.5 text-sm text-red-500" />
+                    </div>
+
                     <!-- Password -->
                     <div class="group">
                         <label for="password" class="block text-sm font-semibold text-slate-700 mb-1">Password</label>
@@ -272,3 +329,26 @@
     </script>
     </body>
 </html>
+
+<script>
+    // KTP Photo Preview
+    function updateKtpPreview(input) {
+        const previewContainer = document.getElementById('ktp-preview-container');
+        const preview = document.getElementById('ktp-preview');
+        const filename = document.getElementById('ktp-filename');
+        
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                previewContainer.classList.remove('hidden');
+                filename.textContent = input.files[0].name;
+                filename.classList.remove('hidden');
+            };
+            reader.readAsDataURL(input.files[0]);
+        } else {
+            previewContainer.classList.add('hidden');
+            filename.classList.add('hidden');
+        }
+    }
+</script>

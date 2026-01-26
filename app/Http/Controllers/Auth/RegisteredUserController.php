@@ -10,6 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
@@ -36,7 +37,24 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'city' => ['required', 'exists:cities,id'],
+            'ktp_number' => ['required', 'string', 'size:16', 'unique:users,ktp_number', 'regex:/^[0-9]{16}$/'],
+            'ktp_photo' => ['required', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
+        ], [
+            'ktp_number.size' => 'Nomor KTP harus 16 digit',
+            'ktp_number.regex' => 'Nomor KTP hanya boleh berisi angka',
+            'ktp_number.unique' => 'Nomor KTP sudah terdaftar',
+            'ktp_photo.required' => 'Foto KTP harus diupload',
+            'ktp_photo.image' => 'File harus berupa gambar',
+            'ktp_photo.mimes' => 'Format gambar harus JPG atau PNG',
+            'ktp_photo.max' => 'Ukuran file maksimal 2MB',
         ]);
+
+        // Handle KTP photo upload
+        $ktpPhotoPath = null;
+        if ($request->hasFile('ktp_photo')) {
+            // Store in public disk with directory ktp-photos
+            $ktpPhotoPath = $request->file('ktp_photo')->store('ktp-photos', 'public');
+        }
 
         // Get coordinates from city
         $cityData = LocationHelper::getCoordinatesByCity($request->city);
@@ -48,12 +66,14 @@ class RegisteredUserController extends Controller
             'city_id' => $request->city,
             'latitude' => $cityData['latitude'] ?? null,
             'longitude' => $cityData['longitude'] ?? null,
+            'ktp_number' => $request->ktp_number,
+            'ktp_photo_path' => $ktpPhotoPath,
         ]);
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect(route('books.index', absolute: false));
     }
 }

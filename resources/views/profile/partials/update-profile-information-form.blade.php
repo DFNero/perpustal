@@ -11,7 +11,7 @@
         </div>
     </header>
 
-    <form method="post" action="{{ route('profile.update') }}" class="space-y-8">
+    <form method="post" action="{{ route('profile.update') }}" class="space-y-8" enctype="multipart/form-data">
         @csrf
         @method('patch')
 
@@ -70,6 +70,78 @@
             </div>
         @endif
 
+        <!-- KTP Information Section -->
+        <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 border border-purple-200">
+            <div class="flex items-center gap-2 mb-4">
+                <span class="text-lg">🆔</span>
+                <h3 class="text-lg font-bold text-gray-900">Informasi KTP</h3>
+                @if($user->hasKtpRegistered())
+                    <span class="ml-auto px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">✓ Terverifikasi</span>
+                @else
+                    <span class="ml-auto px-3 py-1 bg-red-100 text-red-800 text-xs font-semibold rounded-full">⚠ Belum Lengkap</span>
+                @endif
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- KTP Display Component -->
+                <div>
+                    <x-ktp-card :user="$user" size="md" />
+                </div>
+
+                <!-- KTP Update Form -->
+                <div class="space-y-4">
+                    <p class="text-sm text-gray-700 font-semibold mb-3">Update Data KTP</p>
+                    
+                    <!-- KTP Number -->
+                    <div>
+                        <label for="ktp_number" class="block text-sm font-medium text-gray-700 mb-1">Nomor KTP (16 Digit)</label>
+                        <input 
+                            id="ktp_number" 
+                            name="ktp_number" 
+                            type="text" 
+                            maxlength="16"
+                            inputmode="numeric"
+                            class="w-full px-4 py-2 rounded-lg border-2 border-purple-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all text-gray-900 placeholder-gray-400 font-mono" 
+                            value="{{ old('ktp_number', $user->ktp_number) }}" 
+                            autocomplete="off"
+                            placeholder="1234567890123456"
+                        />
+                        @error('ktp_number')
+                            <p class="mt-1 text-sm text-red-600 font-medium">{{ $message }}</p>
+                        @enderror
+                        <p class="text-xs text-gray-500 mt-1">Hanya angka, 16 digit</p>
+                    </div>
+
+                    <!-- KTP Photo Upload -->
+                    <div>
+                        <label for="ktp_photo" class="block text-sm font-medium text-gray-700 mb-2">Foto KTP (JPG/PNG Max 2MB)</label>
+                        <div class="relative">
+                            <input 
+                                type="file" 
+                                id="ktp_photo" 
+                                name="ktp_photo" 
+                                accept="image/jpeg,image/png,image/jpg" 
+                                class="hidden"
+                                onchange="updateProfileKtpPreview(this)"
+                            />
+                            <label for="ktp_photo" class="flex items-center justify-center w-full px-4 py-3 border-2 border-dashed border-purple-300 rounded-lg cursor-pointer hover:border-purple-500 hover:bg-purple-50 transition-colors bg-white">
+                                <div class="text-center">
+                                    <svg class="mx-auto h-6 w-6 text-purple-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                                    </svg>
+                                    <p class="mt-1 text-xs text-gray-600"><span class="font-semibold text-purple-600">Klik</span> untuk ganti foto</p>
+                                </div>
+                            </label>
+                        </div>
+                        @error('ktp_photo')
+                            <p class="mt-1 text-sm text-red-600 font-medium">{{ $message }}</p>
+                        @enderror
+                        <p id="ktp-filename" class="text-xs text-green-600 mt-2 font-medium hidden"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Save Button -->
         <div class="flex items-center gap-4">
             <button 
@@ -93,3 +165,17 @@
         </div>
     </form>
 </section>
+
+<script>
+    // KTP Photo Preview in Profile
+    function updateProfileKtpPreview(input) {
+        const filename = document.getElementById('ktp-filename');
+        
+        if (input.files && input.files[0]) {
+            filename.textContent = `✓ File dipilih: ${input.files[0].name}`;
+            filename.classList.remove('hidden');
+        } else {
+            filename.classList.add('hidden');
+        }
+    }
+</script>

@@ -27,6 +27,8 @@ class User extends Authenticatable
         'latitude',
         'longitude',
         'city_id',
+        'ktp_number',
+        'ktp_photo_path',
     ];
 
     /**
@@ -111,4 +113,22 @@ class User extends Authenticatable
         return $this->belongsTo(City::class);
     }
 
+    /**
+     * Get KTP photo URL (full path to image in public storage)
+     */
+    public function getKtpPhotoUrlAttribute(): ?string
+    {
+        if (!$this->ktp_photo_path) {
+            return null;
+        }
+        return asset('storage/' . $this->ktp_photo_path);
+    }
+
+    /**
+     * Check if user has KTP registered
+     */
+    public function hasKtpRegistered(): bool
+    {
+        return $this->ktp_number !== null && $this->ktp_photo_path !== null;
+    }
 }
